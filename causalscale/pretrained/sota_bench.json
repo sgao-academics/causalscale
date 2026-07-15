@@ -1,0 +1,127 @@
+[
+  {
+    "d": 30,
+    "n": 200,
+    "true_edges": 88,
+    "notears": {
+      "edges": 82,
+      "f1": 0.035,
+      "precision": 0.037,
+      "recall": 0.034,
+      "time_s": 23.2
+    },
+    "sscagate": {
+      "base": 82,
+      "gate": 109,
+      "delta": 27,
+      "time_s": 72.1
+    },
+    "lowrank_gnn": {
+      "edges": 593,
+      "f1": 0.991,
+      "precision": 0.981,
+      "recall": 1.0,
+      "time_s": 0.1
+    }
+  },
+  {
+    "d": 50,
+    "n": 300,
+    "true_edges": 252,
+    "notears": {
+      "edges": 264,
+      "f1": 0.023,
+      "precision": 0.023,
+      "recall": 0.024,
+      "time_s": 179.0
+    },
+    "sscagate": {
+      "base": 276,
+      "gate": 460,
+      "delta": 184,
+      "time_s": 69.0
+    },
+    "lowrank_gnn": {
+      "edges": 1992,
+      "f1": 0.99,
+      "precision": 0.98,
+      "recall": 1.0,
+      "time_s": 0.1
+    }
+  },
+  {
+    "d": 100,
+    "n": 400,
+    "true_edges": 730,
+    "notears": {
+      "edges": 188,
+      "f1": 0.011,
+      "precision": 0.027,
+      "recall": 0.007,
+      "time_s": 984.1
+    },
+    "sscagate": {
+      "base": 1144,
+      "gate": 1453,
+      "delta": 309,
+      "time_s": 152.2
+    },
+    "lowrank_gnn": {
+      "edges": 7539,
+      "f1": 0.985,
+      "precision": 0.971,
+      "recall": 1.0,
+      "time_s": 0.1
+    }
+  },
+  {
+    "d": 150,
+    "n": 500,
+    "true_edges": 1152,
+    "notears": {
+      "edges": 57,
+      "f1": 0.002,
+      "precision": 0.018,
+      "recall": 0.001,
+      "time_s": 122.7
+    },
+    "sscagate": {
+      "base": 1174,
+      "gate": 1069,
+      "delta": -105,
+      "time_s": 154.1
+    },
+    "lowrank_gnn": {
+      "edges": 18995,
+      "f1": 0.983,
+      "precision": 0.966,
+      "recall": 1.0,
+      "time_s": 0.1
+    }
+  },
+  {
+    "d": 200,
+    "n": 600,
+    "true_edges": 1631,
+    "notears": {
+      "edges": 5,
+      "f1": 0.001,
+      "precision": 0.2,
+      "recall": 0.001,
+      "time_s": 34.9
+    },
+    "sscagate": {
+      "base": 0,
+      "gate": 0,
+      "delta": 0,
+      "time_s": 2.9
+    },
+    "lowrank_gnn": {
+      "edges": 35950,
+      "f1": 0.991,
+      "precision": 0.983,
+      "recall": 1.0,
+      "time_s": 0.1
+    }
+  }
+]

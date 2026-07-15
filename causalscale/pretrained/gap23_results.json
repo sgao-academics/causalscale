@@ -1,0 +1,143 @@
+{
+  "gap2_transfer": {
+    "w0_time_s": 74.14846348762512,
+    "w0_delta": 72,
+    "transfers": [
+      {
+        "name": "ACC",
+        "n": 79,
+        "base": 106,
+        "gate": 774,
+        "delta": 668,
+        "time_s": 73.9
+      },
+      {
+        "name": "BLCA",
+        "n": 426,
+        "base": 60,
+        "gate": 107,
+        "delta": 47,
+        "time_s": 73.8
+      },
+      {
+        "name": "BRCA",
+        "n": 1218,
+        "base": 47,
+        "gate": 101,
+        "delta": 54,
+        "time_s": 72.9
+      },
+      {
+        "name": "CESC",
+        "n": 308,
+        "base": 59,
+        "gate": 143,
+        "delta": 84,
+        "time_s": 73.2
+      },
+      {
+        "name": "CHOL",
+        "n": 45,
+        "base": 115,
+        "gate": 383,
+        "delta": 268,
+        "time_s": 71.9
+      },
+      {
+        "name": "COAD",
+        "n": 329,
+        "base": 79,
+        "gate": 224,
+        "delta": 145,
+        "time_s": 87.5
+      },
+      {
+        "name": "DLBC",
+        "n": 48,
+        "base": 130,
+        "gate": 782,
+        "delta": 652,
+        "time_s": 88.1
+      },
+      {
+        "name": "ESCA",
+        "n": 196,
+        "base": 100,
+        "gate": 305,
+        "delta": 205,
+        "time_s": 79.1
+      }
+    ],
+    "avg_delta": 265.375,
+    "avg_time_s": 77.55000000000001
+  },
+  "gap3_benchmark": {
+    "configs": [
+      {
+        "d": 30,
+        "n": 200,
+        "true": 88,
+        "notears": 0,
+        "nt_precision": 0,
+        "nt_recall": 0,
+        "nt_time": 0,
+        "sscagate": 109,
+        "sc_time": 79.8,
+        "gnn": 593,
+        "gnn_time": 0.2
+      },
+      {
+        "d": 50,
+        "n": 300,
+        "true": 252,
+        "notears": 0,
+        "nt_precision": 0,
+        "nt_recall": 0,
+        "nt_time": 0,
+        "sscagate": 460,
+        "sc_time": 78.9,
+        "gnn": 1992,
+        "gnn_time": 0.1
+      },
+      {
+        "d": 100,
+        "n": 400,
+        "true": 730,
+        "notears": 0,
+        "nt_precision": 0,
+        "nt_recall": 0,
+        "nt_time": 0,
+        "sscagate": 1453,
+        "sc_time": 161.8,
+        "gnn": 7539,
+        "gnn_time": 0.1
+      },
+      {
+        "d": 200,
+        "n": 500,
+        "true": 1631,
+        "notears": 0,
+        "nt_precision": 0,
+        "nt_recall": 0,
+        "nt_time": 0,
+        "sscagate": 0,
+        "sc_time": 2.9,
+        "gnn": 35734,
+        "gnn_time": 0.1
+      },
+      {
+        "d": 300,
+        "n": 600,
+        "true": 2512,
+        "notears": 0,
+        "nt_precision": 0,
+        "nt_recall": 0,
+        "nt_time": 0,
+        "sscagate": 0,
+        "sc_time": 2.9,
+        "gnn": 84175,
+        "gnn_time": 0.2
+      }
+    ]
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "scale_tests": [
+    {
+      "d": 2000,
+      "gt_edges": 2228152,
+      "gnn_edges": 2509149,
+      "recovery_pct": 99.90637981609872,
+      "time_s": 0.2,
+      "gt_time_s": 0.2,
+      "params": 256000,
+      "est_mem_mb": 33
+    },
+    {
+      "d": 5000,
+      "gt_edges": 13722318,
+      "gnn_edges": 15765713,
+      "recovery_pct": 99.9214418438634,
+      "time_s": 1.2,
+      "gt_time_s": 0.0,
+      "params": 640000,
+      "est_mem_mb": 203
+    },
+    {
+      "d": 10000,
+      "gt_edges": 41163812,
+      "gnn_edges": 49056905,
+      "recovery_pct": 99.24731703662431,
+      "time_s": 2.8,
+      "gt_time_s": 0.0,
+      "params": 1280000,
+      "est_mem_mb": 805
+    },
+    {
+      "d": 19215,
+      "n_cells": 382,
+      "rank": 64,
+      "gt_edges": 20725228,
+      "gnn_edges": 25817342,
+      "recovery_pct": 89.05581159348404,
+      "train_time_s": 1580.5,
+      "gt_time_s": 0.3,
+      "params": 2459520
+    }
+  ],
+  "baselines_d100": {
+    "d": 100,
+    "n": 230,
+    "correlation": {
+      "edges": 5510,
+      "time_s": 0.0
+    },
+    "sscagate": {
+      "base": 94,
+      "gate": 36,
+      "time_s": 69.3
+    },
+    "lowrank_gnn": {
+      "edges": 5803,
+      "time_s": 0.1
+    },
+    "lingam": {
+      "edges": -1,
+      "time_s": -1
+    },
+    "pc_algorithm": {
+      "edges": -1,
+      "time_s": -1
+    },
+    "random_forest": {
+      "edges": 990,
+      "time_s": 8.9
+    }
+  }
+}

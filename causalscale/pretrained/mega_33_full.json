@@ -1,0 +1,850 @@
+{
+  "ACC": {
+    "n": 79,
+    "d": 100,
+    "cagate_base_mean": 10.0,
+    "cagate_gate_mean": 640.0,
+    "cagate_delta": 630.0,
+    "sscagate_delta": 466.7,
+    "sscagate_K_effective": 7,
+    "v3_advantage": -163.3,
+    "winner": "CAGate",
+    "cagate_base": [
+      10.0,
+      10.0,
+      10.0,
+      10.0,
+      10.0
+    ],
+    "cagate_gate": [
+      640.0,
+      640.0,
+      640.0,
+      640.0,
+      640.0
+    ],
+    "sscagate_success": true,
+    "updated": "2026-06-27",
+    "data_source": "TCGA_ACC_HiSeqV2.tsv (verified, n=79)"
+  },
+  "BLCA": {
+    "n": 426,
+    "d": 100,
+    "cagate_base_mean": 20.0,
+    "cagate_gate_mean": 78.0,
+    "cagate_delta": 58.0,
+    "sscagate_delta": 63.33333333333333,
+    "sscagate_K_effective": 8,
+    "v3_advantage": 5.333333333333329,
+    "winner": "SSCAGate",
+    "cagate_base": [
+      20.0,
+      20.0,
+      20.0,
+      20.0,
+      20.0
+    ],
+    "cagate_gate": [
+      78.0,
+      78.0,
+      78.0,
+      78.0,
+      78.0
+    ]
+  },
+  "BRCA": {
+    "n": 1218,
+    "d": 100,
+    "cagate_base_mean": 11.0,
+    "cagate_gate_mean": 51.0,
+    "cagate_delta": 40.0,
+    "sscagate_delta": 53.33333333333333,
+    "sscagate_K_effective": 7,
+    "v3_advantage": 13.333333333333329,
+    "winner": "SSCAGate",
+    "cagate_base": [
+      11.0,
+      11.0,
+      11.0,
+      11.0,
+      11.0
+    ],
+    "cagate_gate": [
+      51.0,
+      51.0,
+      51.0,
+      51.0,
+      51.0
+    ]
+  },
+  "CESC": {
+    "n": 308,
+    "d": 100,
+    "cagate_base_mean": 16.0,
+    "cagate_gate_mean": 143.0,
+    "cagate_delta": 127.0,
+    "sscagate_delta": 120.0,
+    "sscagate_K_effective": 7,
+    "v3_advantage": -7.0,
+    "winner": "CAGate",
+    "cagate_base": [
+      16.0,
+      16.0,
+      16.0,
+      16.0,
+      16.0
+    ],
+    "cagate_gate": [
+      143.0,
+      143.0,
+      143.0,
+      143.0,
+      143.0
+    ]
+  },
+  "CHOL": {
+    "n": 45,
+    "d": 100,
+    "cagate_base_mean": 13.0,
+    "cagate_gate_mean": 230.0,
+    "cagate_delta": 217.0,
+    "sscagate_delta": 215.0,
+    "sscagate_K_effective": 2,
+    "v3_advantage": -2.0,
+    "winner": "CAGate",
+    "cagate_base": [
+      13.0,
+      13.0,
+      13.0,
+      13.0,
+      13.0
+    ],
+    "cagate_gate": [
+      230.0,
+      230.0,
+      230.0,
+      230.0,
+      230.0
+    ],
+    "sscagate_success": true,
+    "updated": "2026-06-27",
+    "data_source": "TCGA_CHOL_HiSeqV2.tsv (verified, n=45)"
+  },
+  "COAD": {
+    "n": 329,
+    "d": 100,
+    "cagate_base_mean": 23.0,
+    "cagate_gate_mean": 134.0,
+    "cagate_delta": 111.0,
+    "sscagate_delta": 112.66666666666666,
+    "sscagate_K_effective": 8,
+    "v3_advantage": 1.6666666666666572,
+    "winner": "SSCAGate",
+    "cagate_base": [
+      23.0,
+      23.0,
+      23.0,
+      23.0,
+      23.0
+    ],
+    "cagate_gate": [
+      134.0,
+      134.0,
+      134.0,
+      134.0,
+      134.0
+    ]
+  },
+  "DLBC": {
+    "n": 48,
+    "d": 100,
+    "cagate_base_mean": 13.0,
+    "cagate_gate_mean": 778.0,
+    "cagate_delta": 765.0,
+    "sscagate_delta": 572.0,
+    "sscagate_K_effective": 5,
+    "v3_advantage": -193.0,
+    "winner": "CAGate",
+    "cagate_base": [
+      13.0,
+      13.0,
+      13.0,
+      13.0,
+      13.0
+    ],
+    "cagate_gate": [
+      778.0,
+      778.0,
+      778.0,
+      778.0,
+      778.0
+    ],
+    "sscagate_success": true,
+    "updated": "2026-06-27",
+    "data_source": "TCGA_DLBC_HiSeqV2.tsv (verified, n=48)"
+  },
+  "ESCA": {
+    "n": 196,
+    "d": 100,
+    "cagate_base_mean": 27.0,
+    "cagate_gate_mean": 189.0,
+    "cagate_delta": 162.0,
+    "sscagate_delta": 148.0,
+    "sscagate_K_effective": 7,
+    "v3_advantage": -14.0,
+    "winner": "CAGate",
+    "cagate_base": [
+      27.0,
+      27.0,
+      27.0,
+      27.0,
+      27.0
+    ],
+    "cagate_gate": [
+      189.0,
+      189.0,
+      189.0,
+      189.0,
+      189.0
+    ]
+  },
+  "GBM": {
+    "n": 172,
+    "d": 100,
+    "cagate_base_mean": 27.0,
+    "cagate_gate_mean": 371.0,
+    "cagate_delta": 344.0,
+    "sscagate_delta": 291.0,
+    "sscagate_K_effective": 6,
+    "v3_advantage": -53.0,
+    "winner": "CAGate",
+    "cagate_base": [
+      27.0,
+      27.0,
+      27.0,
+      27.0,
+      27.0
+    ],
+    "cagate_gate": [
+      371.0,
+      371.0,
+      371.0,
+      371.0,
+      371.0
+    ]
+  },
+  "HNSC": {
+    "n": 566,
+    "d": 100,
+    "cagate_base_mean": 24.0,
+    "cagate_gate_mean": 132.0,
+    "cagate_delta": 108.0,
+    "sscagate_delta": 105.33333333333333,
+    "sscagate_K_effective": 7,
+    "v3_advantage": -2.6666666666666714,
+    "winner": "CAGate",
+    "cagate_base": [
+      24.0,
+      24.0,
+      24.0,
+      24.0,
+      24.0
+    ],
+    "cagate_gate": [
+      132.0,
+      132.0,
+      132.0,
+      132.0,
+      132.0
+    ]
+  },
+  "KICH": {
+    "n": 91,
+    "d": 100,
+    "cagate_base_mean": 30.0,
+    "cagate_gate_mean": 385.0,
+    "cagate_delta": 355.0,
+    "sscagate_delta": 242.7,
+    "sscagate_K_effective": 8,
+    "v3_advantage": -112.3,
+    "winner": "CAGate",
+    "cagate_base": [
+      30.0,
+      30.0,
+      30.0,
+      30.0,
+      30.0
+    ],
+    "cagate_gate": [
+      385.0,
+      385.0,
+      385.0,
+      385.0,
+      385.0
+    ],
+    "sscagate_success": true,
+    "updated": "2026-06-27",
+    "data_source": "TCGA_KICH_HiSeqV2.tsv (verified, n=91)"
+  },
+  "KIRC": {
+    "n": 606,
+    "d": 100,
+    "cagate_base_mean": 21.0,
+    "cagate_gate_mean": 91.0,
+    "cagate_delta": 70.0,
+    "sscagate_delta": 81.0,
+    "sscagate_K_effective": 8,
+    "v3_advantage": 11.0,
+    "winner": "SSCAGate",
+    "cagate_base": [
+      21.0,
+      21.0,
+      21.0,
+      21.0,
+      21.0
+    ],
+    "cagate_gate": [
+      91.0,
+      91.0,
+      91.0,
+      91.0,
+      91.0
+    ]
+  },
+  "KIRP": {
+    "n": 323,
+    "d": 100,
+    "cagate_base_mean": 17.0,
+    "cagate_gate_mean": 132.0,
+    "cagate_delta": 115.0,
+    "sscagate_delta": 108.0,
+    "sscagate_K_effective": 7,
+    "v3_advantage": -7.0,
+    "winner": "CAGate",
+    "cagate_base": [
+      17.0,
+      17.0,
+      17.0,
+      17.0,
+      17.0
+    ],
+    "cagate_gate": [
+      132.0,
+      132.0,
+      132.0,
+      132.0,
+      132.0
+    ]
+  },
+  "LAML": {
+    "n": 173,
+    "d": 100,
+    "cagate_base_mean": 21.0,
+    "cagate_gate_mean": 278.0,
+    "cagate_delta": 257.0,
+    "sscagate_delta": 229.33333333333334,
+    "sscagate_K_effective": 7,
+    "v3_advantage": -27.666666666666657,
+    "winner": "CAGate",
+    "cagate_base": [
+      21.0,
+      21.0,
+      21.0,
+      21.0,
+      21.0
+    ],
+    "cagate_gate": [
+      278.0,
+      278.0,
+      278.0,
+      278.0,
+      278.0
+    ]
+  },
+  "LGG": {
+    "n": 530,
+    "d": 100,
+    "cagate_base_mean": 12.0,
+    "cagate_gate_mean": 141.0,
+    "cagate_delta": 129.0,
+    "sscagate_delta": 143.66666666666666,
+    "sscagate_K_effective": 7,
+    "v3_advantage": 14.666666666666657,
+    "winner": "SSCAGate",
+    "cagate_base": [
+      12.0,
+      12.0,
+      12.0,
+      12.0,
+      12.0
+    ],
+    "cagate_gate": [
+      141.0,
+      141.0,
+      141.0,
+      141.0,
+      141.0
+    ]
+  },
+  "LIHC": {
+    "n": 423,
+    "d": 100,
+    "cagate_base_mean": 11.0,
+    "cagate_gate_mean": 95.0,
+    "cagate_delta": 84.0,
+    "sscagate_delta": 98.33333333333333,
+    "sscagate_K_effective": 7,
+    "v3_advantage": 14.333333333333329,
+    "winner": "SSCAGate",
+    "cagate_base": [
+      11.0,
+      11.0,
+      11.0,
+      11.0,
+      11.0
+    ],
+    "cagate_gate": [
+      95.0,
+      95.0,
+      95.0,
+      95.0,
+      95.0
+    ]
+  },
+  "LUAD": {
+    "n": 576,
+    "d": 100,
+    "cagate_base_mean": 13.0,
+    "cagate_gate_mean": 76.0,
+    "cagate_delta": 63.0,
+    "sscagate_delta": 70.33333333333333,
+    "sscagate_K_effective": 7,
+    "v3_advantage": 7.333333333333329,
+    "winner": "SSCAGate",
+    "cagate_base": [
+      13.0,
+      13.0,
+      13.0,
+      13.0,
+      13.0
+    ],
+    "cagate_gate": [
+      76.0,
+      76.0,
+      76.0,
+      76.0,
+      76.0
+    ]
+  },
+  "LUSC": {
+    "n": 553,
+    "d": 100,
+    "cagate_base_mean": 29.0,
+    "cagate_gate_mean": 107.0,
+    "cagate_delta": 78.0,
+    "sscagate_delta": 86.33333333333333,
+    "sscagate_K_effective": 7,
+    "v3_advantage": 8.333333333333329,
+    "winner": "SSCAGate",
+    "cagate_base": [
+      29.0,
+      29.0,
+      29.0,
+      29.0,
+      29.0
+    ],
+    "cagate_gate": [
+      107.0,
+      107.0,
+      107.0,
+      107.0,
+      107.0
+    ]
+  },
+  "MESO": {
+    "n": 87,
+    "d": 100,
+    "cagate_base_mean": 11.0,
+    "cagate_gate_mean": 571.0,
+    "cagate_delta": 560.0,
+    "sscagate_delta": 419.0,
+    "sscagate_K_effective": 7,
+    "v3_advantage": -141.0,
+    "winner": "CAGate",
+    "cagate_base": [
+      11.0,
+      11.0,
+      11.0,
+      11.0,
+      11.0
+    ],
+    "cagate_gate": [
+      571.0,
+      571.0,
+      571.0,
+      571.0,
+      571.0
+    ],
+    "sscagate_success": true,
+    "updated": "2026-06-27",
+    "data_source": "TCGA_MESO_HiSeqV2.tsv (verified, n=87)"
+  },
+  "OV": {
+    "n": 308,
+    "d": 100,
+    "cagate_base_mean": 9.0,
+    "cagate_gate_mean": 69.0,
+    "cagate_delta": 60.0,
+    "sscagate_delta": 62.33333333333333,
+    "sscagate_K_effective": 8,
+    "v3_advantage": 2.3333333333333286,
+    "winner": "SSCAGate",
+    "cagate_base": [
+      9.0,
+      9.0,
+      9.0,
+      9.0,
+      9.0
+    ],
+    "cagate_gate": [
+      69.0,
+      69.0,
+      69.0,
+      69.0,
+      69.0
+    ]
+  },
+  "PAAD": {
+    "n": 183,
+    "d": 100,
+    "cagate_base_mean": 28.0,
+    "cagate_gate_mean": 358.0,
+    "cagate_delta": 330.0,
+    "sscagate_delta": 258.0,
+    "sscagate_K_effective": 6,
+    "v3_advantage": -72.0,
+    "winner": "CAGate",
+    "cagate_base": [
+      28.0,
+      28.0,
+      28.0,
+      28.0,
+      28.0
+    ],
+    "cagate_gate": [
+      358.0,
+      358.0,
+      358.0,
+      358.0,
+      358.0
+    ]
+  },
+  "PCPG": {
+    "n": 187,
+    "d": 100,
+    "cagate_base_mean": 13.0,
+    "cagate_gate_mean": 322.0,
+    "cagate_delta": 309.0,
+    "sscagate_delta": 232.0,
+    "sscagate_K_effective": 7,
+    "v3_advantage": -77.0,
+    "winner": "CAGate",
+    "cagate_base": [
+      13.0,
+      13.0,
+      13.0,
+      13.0,
+      13.0
+    ],
+    "cagate_gate": [
+      322.0,
+      322.0,
+      322.0,
+      322.0,
+      322.0
+    ],
+    "updated": "2026-06-27",
+    "data_source": "TCGA_PCPG_HiSeqV2.tsv (correct, 187 samples)"
+  },
+  "PRAD": {
+    "n": 550,
+    "d": 100,
+    "cagate_base_mean": 11.0,
+    "cagate_gate_mean": 92.0,
+    "cagate_delta": 81.0,
+    "sscagate_delta": 81.33333333333333,
+    "sscagate_K_effective": 7,
+    "v3_advantage": 0.3333333333333286,
+    "winner": "SSCAGate",
+    "cagate_base": [
+      11.0,
+      11.0,
+      11.0,
+      11.0,
+      11.0
+    ],
+    "cagate_gate": [
+      92.0,
+      92.0,
+      92.0,
+      92.0,
+      92.0
+    ]
+  },
+  "READ": {
+    "n": 105,
+    "d": 100,
+    "cagate_base_mean": 25.0,
+    "cagate_gate_mean": 592.0,
+    "cagate_delta": 567.0,
+    "sscagate_delta": 461.3333333333333,
+    "sscagate_K_effective": 7,
+    "v3_advantage": -105.66666666666669,
+    "winner": "CAGate",
+    "cagate_base": [
+      25.0,
+      25.0,
+      25.0,
+      25.0,
+      25.0
+    ],
+    "cagate_gate": [
+      592.0,
+      592.0,
+      592.0,
+      592.0,
+      592.0
+    ]
+  },
+  "SARC": {
+    "n": 265,
+    "d": 100,
+    "cagate_base_mean": 11.0,
+    "cagate_gate_mean": 136.0,
+    "cagate_delta": 125.0,
+    "sscagate_delta": 117.0,
+    "sscagate_K_effective": 8,
+    "v3_advantage": -8.0,
+    "winner": "CAGate",
+    "cagate_base": [
+      11.0,
+      11.0,
+      11.0,
+      11.0,
+      11.0
+    ],
+    "cagate_gate": [
+      136.0,
+      136.0,
+      136.0,
+      136.0,
+      136.0
+    ]
+  },
+  "SKCM": {
+    "n": 474,
+    "d": 100,
+    "cagate_base_mean": 26.0,
+    "cagate_gate_mean": 120.0,
+    "cagate_delta": 94.0,
+    "sscagate_delta": 109.33333333333334,
+    "sscagate_K_effective": 8,
+    "v3_advantage": 15.333333333333343,
+    "winner": "SSCAGate",
+    "cagate_base": [
+      26.0,
+      26.0,
+      26.0,
+      26.0,
+      26.0
+    ],
+    "cagate_gate": [
+      120.0,
+      120.0,
+      120.0,
+      120.0,
+      120.0
+    ]
+  },
+  "STAD": {
+    "n": 450,
+    "d": 100,
+    "cagate_base_mean": 19.0,
+    "cagate_gate_mean": 84.0,
+    "cagate_delta": 65.0,
+    "sscagate_delta": 77.66666666666667,
+    "sscagate_K_effective": 7,
+    "v3_advantage": 12.666666666666671,
+    "winner": "SSCAGate",
+    "cagate_base": [
+      19.0,
+      19.0,
+      19.0,
+      19.0,
+      19.0
+    ],
+    "cagate_gate": [
+      84.0,
+      84.0,
+      84.0,
+      84.0,
+      84.0
+    ]
+  },
+  "TGCT": {
+    "n": 156,
+    "d": 100,
+    "cagate_base_mean": 34.0,
+    "cagate_gate_mean": 174.0,
+    "cagate_delta": 140.0,
+    "sscagate_delta": 120.66666666666666,
+    "sscagate_K_effective": 7,
+    "v3_advantage": -19.333333333333343,
+    "winner": "CAGate",
+    "cagate_base": [
+      34.0,
+      34.0,
+      34.0,
+      34.0,
+      34.0
+    ],
+    "cagate_gate": [
+      174.0,
+      174.0,
+      174.0,
+      174.0,
+      174.0
+    ]
+  },
+  "THCA": {
+    "n": 572,
+    "d": 100,
+    "cagate_base_mean": 21.0,
+    "cagate_gate_mean": 101.0,
+    "cagate_delta": 80.0,
+    "sscagate_delta": 103.0,
+    "sscagate_K_effective": 7,
+    "v3_advantage": 23.0,
+    "winner": "SSCAGate",
+    "cagate_base": [
+      21.0,
+      21.0,
+      21.0,
+      21.0,
+      21.0
+    ],
+    "cagate_gate": [
+      101.0,
+      101.0,
+      101.0,
+      101.0,
+      101.0
+    ]
+  },
+  "THYM": {
+    "n": 122,
+    "d": 100,
+    "cagate_base_mean": 25.0,
+    "cagate_gate_mean": 383.0,
+    "cagate_delta": 358.0,
+    "sscagate_delta": 252.33333333333331,
+    "sscagate_K_effective": 6,
+    "v3_advantage": -105.66666666666669,
+    "winner": "CAGate",
+    "cagate_base": [
+      25.0,
+      25.0,
+      25.0,
+      25.0,
+      25.0
+    ],
+    "cagate_gate": [
+      383.0,
+      383.0,
+      383.0,
+      383.0,
+      383.0
+    ]
+  },
+  "UCEC": {
+    "n": 201,
+    "d": 100,
+    "cagate_base_mean": 11.0,
+    "cagate_gate_mean": 186.0,
+    "cagate_delta": 175.0,
+    "sscagate_delta": 188.66666666666666,
+    "sscagate_K_effective": 7,
+    "v3_advantage": 13.666666666666657,
+    "winner": "SSCAGate",
+    "cagate_base": [
+      11.0,
+      11.0,
+      11.0,
+      11.0,
+      11.0
+    ],
+    "cagate_gate": [
+      186.0,
+      186.0,
+      186.0,
+      186.0,
+      186.0
+    ]
+  },
+  "UCS": {
+    "n": 57,
+    "d": 100,
+    "cagate_base_mean": 2.0,
+    "cagate_gate_mean": 675.0,
+    "cagate_delta": 673.0,
+    "sscagate_delta": 548.7,
+    "sscagate_K_effective": 7,
+    "v3_advantage": -124.3,
+    "winner": "CAGate",
+    "cagate_base": [
+      2.0,
+      2.0,
+      2.0,
+      2.0,
+      2.0
+    ],
+    "cagate_gate": [
+      675.0,
+      675.0,
+      675.0,
+      675.0,
+      675.0
+    ],
+    "sscagate_success": true,
+    "updated": "2026-06-27",
+    "data_source": "TCGA_UCS_HiSeqV2.tsv (verified, n=57)"
+  },
+  "UVM": {
+    "n": 80,
+    "d": 100,
+    "cagate_base_mean": 26.0,
+    "cagate_gate_mean": 781.0,
+    "cagate_delta": 755.0,
+    "sscagate_delta": 596.3,
+    "sscagate_K_effective": 7,
+    "v3_advantage": -158.7,
+    "winner": "CAGate",
+    "cagate_base": [
+      26.0,
+      26.0,
+      26.0,
+      26.0,
+      26.0
+    ],
+    "cagate_gate": [
+      781.0,
+      781.0,
+      781.0,
+      781.0,
+      781.0
+    ],
+    "sscagate_success": true,
+    "updated": "2026-06-27",
+    "data_source": "TCGA_UVM_HiSeqV2.tsv (verified, n=80)"
+  }
+}
