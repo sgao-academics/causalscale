@@ -22,7 +22,7 @@ with open("README.md", encoding="utf-8") as f:
 
 setup(
     name="causalscale",
-    version="3.0.0",
+    version="3.1.0",
     description="Unified Causal Discovery Platform — LowRankGNN + SSCAGate + MultiScale + Counterfactual",
     long_description=long_description,
     long_description_content_type="text/markdown",

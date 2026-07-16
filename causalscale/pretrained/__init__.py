@@ -149,3 +149,135 @@ def list_benchmarks() -> Dict[str, str]:
         else:
             result[name] = f"{fname} (NOT FOUND)"
     return result
+
+
+# ═══════════════════════════════════════════════════════════════════
+# Biological Validation: STRING + TRRUST cross-reference
+# ═══════════════════════════════════════════════════════════════════
+
+def validate_against_string(
+    edges: list,
+    data_dir: Optional[str] = None,
+    verbose: bool = False,
+) -> Dict:
+    """Validate discovered edges against STRING PPI and TRRUST databases.
+
+    Cross-references a list of (gene_i, gene_j, weight) or (source, target, weight)
+    edges against the STRING protein-protein interaction database and TRRUST
+    transcriptional regulatory relationships database.
+
+    Requires the STRING and TRRUST data files in the validation data directory.
+    Downloads are NOT included in the pip package due to size (~154 MB).
+    Download from: https://string-db.org/ and https://www.grnpedia.org/trrust/
+
+    Args:
+        edges: list of (source, target, weight) tuples. Source/target should be
+               gene symbols (e.g., "TP53", "MDM2") matching STRING/TRRUST entries.
+        data_dir: path to directory containing string_ppi_full.txt.gz and
+                  trrust_human.tsv. Defaults to causalscale/pretrained/data/.
+        verbose: print progress
+
+    Returns:
+        dict: {
+            total_edges, validated_edges, validated_pct, precision,
+            tp, fp, fn, string_only, trrust_only, both,
+            validated_list: [(source, target, weight), ...]
+        }
+
+    Example:
+        >>> result = train_lowrank_gnn(data, rank=32)
+        >>> edges = [(gene_names[i], gene_names[j], w) for i,j,w in result['edges']]
+        >>> validation = cs.validate_against_string(edges, verbose=True)
+        >>> print(f"{validation['validated_pct']:.1f}% edges STRING/TRRUST-validated")
+    """
+    import gzip
+
+    if data_dir is None:
+        data_dir = os.path.join(_PRETRAINED_DIR, "data")
+
+    # ── Load TRRUST ──
+    trrust_path = os.path.join(data_dir, "trrust_human.tsv")
+    trrust_pairs = set()
+    if os.path.exists(trrust_path):
+        with open(trrust_path, encoding="utf-8") as f:
+            for line in f:
+                parts = line.strip().split("\t")
+                if len(parts) >= 2:
+                    trrust_pairs.add((parts[0].upper(), parts[1].upper()))
+        if verbose:
+            print(f"  TRRUST: {len(trrust_pairs)} regulatory pairs")
+    else:
+        if verbose:
+            print(f"  TRRUST not found at {trrust_path}")
+
+    # ── Load STRING (with ENSP→Symbol mapping if needed) ──
+    string_path = os.path.join(data_dir, "string_ppi_full.txt.gz")
+    info_path = os.path.join(data_dir, "string_info.txt.gz")
+
+    string_pairs = set()
+    if os.path.exists(string_path) and os.path.exists(info_path):
+        # Build ENSP → Symbol mapping
+        ensp2symbol = {}
+        with gzip.open(info_path, "rt", encoding="utf-8", errors="ignore") as f:
+            next(f)  # skip header
+            for line in f:
+                parts = line.strip().split("\t")
+                if len(parts) >= 2:
+                    eid = parts[0]
+                    sym = parts[1].strip()
+                    ensp2symbol[eid] = sym
+                    if eid.startswith("9606."):
+                        ensp2symbol[eid[5:]] = sym
+
+        # Map STRING ENSP pairs to gene symbols
+        with gzip.open(string_path, "rt", encoding="utf-8", errors="ignore") as f:
+            for line in f:
+                parts = line.strip().split()
+                if len(parts) >= 2:
+                    s1 = ensp2symbol.get(parts[0])
+                    s2 = ensp2symbol.get(parts[1])
+                    if s1 and s2:
+                        string_pairs.add((s1, s2))
+
+        if verbose:
+            print(f"  STRING: {len(string_pairs)} symbol-mapped PPI pairs")
+    else:
+        if verbose:
+            print(f"  STRING data not found. Download from https://string-db.org/")
+
+    # ── Cross-reference ──
+    gold = string_pairs | trrust_pairs
+    validated = []
+    string_only = 0
+    trrust_only = 0
+    both = 0
+
+    for src, tgt, w in edges:
+        pair = (src.upper(), tgt.upper())
+        if pair in gold:
+            validated.append((src, tgt, w))
+            in_s = pair in string_pairs
+            in_t = pair in trrust_pairs
+            if in_s and in_t:
+                both += 1
+            elif in_s:
+                string_only += 1
+            elif in_t:
+                trrust_only += 1
+
+    tp = len(validated)
+    precision = tp / max(len(edges), 1)
+
+    return {
+        "total_edges": len(edges),
+        "validated_edges": tp,
+        "validated_pct": round(precision * 100, 1),
+        "precision": round(precision, 4),
+        "tp": tp,
+        "fp": len(edges) - tp,
+        "fn": len(gold),
+        "string_only": string_only,
+        "trrust_only": trrust_only,
+        "both": both,
+        "validated_list": validated,
+    }

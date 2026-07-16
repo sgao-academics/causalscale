@@ -2,7 +2,7 @@
 import torch, numpy as np, time
 from sklearn.cluster import KMeans
 
-def run_notears(X, device='cuda', lr=0.002, outer=30, inner=200, seed=42):
+def run_notears(X, device='cuda', lr=0.002, outer=40, inner=250, seed=42):
     """Standard NOTEARS with augmented Lagrangian.
     
     Args:
