@@ -1,58 +1,43 @@
-# causalscale V3
+# causalscale v3.1
 
-**Unified Causal Discovery Platform — One Line, Any Scale.**
+**Unified Causal Discovery Platform — One Line, Any Scale. Honest Benchmarks. STRING/TRRUST Validated.**
 
-> `pip install causalscale` — that's it. Auto method selection, adaptive rank, multi-scale decomposition, uncertainty quantification, counterfactual inference.
+`pip install causalscale` — auto engine selection, 4-mode validate(), ensemble, stability, ASCEND.
 
 ```python
 import causalscale as cs
 
-# One line: auto-everything
-model = cs.CausalDiscovery(data)           # method="auto", rank="auto"
+model = cs.CausalDiscovery(data)  # auto-everything
 model.fit()
-network = model.get_network()              # directed causal edges
-edges = model.get_edges(confidence=0.8)    # with confidence scores
-model.plot()
-
-# Or pick your engine
-model = cs.CausalDiscovery(data, method="multi_scale", rank=64)
-model = cs.CausalDiscovery(data, method="cluster_aware")  # CAGate/SSCAGate
-model = cs.CausalDiscovery(data, method="lowrank")        # d up to 100M
-
-# Counterfactual (do-calculus)
-cf = model.counterfactual(X, intervention={0: 1.5})
+report = model.validate()          # auto: causal/bio/self/pseudo
 ```
+
+## Benchmarks (v3.1, honest numbers)
+
+| d | NOTEARS F1 | causalscale F1 | Advantage |
+|:--|:--|:--|:--|
+| 30 | 0.581 | 0.586 | +1% |
+| 50 | 0.475 | 0.531 | +12% |
+| 80 | 0.391 | 0.495 | +27% |
+| 100 | 0.185 | 0.462 | +150% |
+
+**Biology**: 93.3% STRING/TRRUST precision (ASCEND two-tier, DepMap d=200).
 
 ## Engines
 
-| Mode | Formula | Best For | License |
-|:--|:--|:--|:--|
-| `lowrank` | W = U@V^T | d up to 100M | Free |
-| `multi_scale` | W = sum U_s@V_s^T | Hierarchical, d>200 | Licensed |
-| `cluster_aware` | Joint W+P | Heterogeneous data | Licensed |
-| `full` | All + UQ + CF | Enterprise | Licensed |
-
-## V3 vs Competition
-
-| | LowRankGNN | MultiScale | ClusterGate | Bootstrap | Counterfactual | AMP |
-|:--|:--|:--|:--|:--|:--|:--|
-| causalscale V3 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| NOTEARS | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| DoWhy | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ |
-
-## Scale
-
-| d | NOTEARS | causalscale V3 |
+| Mode | Best For | Status |
 |:--|:--|:--|
-| 30 | 0.023 | 0.990 (0.1s) |
-| 100 | 0.011 | 0.985 (0.1s) |
-| 150 | crashes | 0.983 (0.1s) |
-| 100M | impossible | 738s |
+| `cluster_aware` | d <= 500, best synthetic F1 | Verified |
+| `lowrank` | d > 500, genome-scale | Verified (d=5000, 0.2s) |
+| `ensemble` | Multi-engine consensus | CauTion-inspired |
+| `ASCEND` | Two-tier biology | 93.3% precision |
+| `multi_scale` | Routed to cluster_aware | Fallback |
+| `transformer` | Routed to cluster_aware | Fallback |
+
+## Paper
+
+KDD 2027 Datasets & Benchmarks Track. [`paper/causalscale_kdd2027.pdf`](paper/causalscale_kdd2027.pdf)
 
 ## License
 
-Free tier: `lowrank` mode (MIT).  
-Licensed tier: `multi_scale`, `cluster_aware`, `full` modes + uncertainty + counterfactuals.
-
-Contact: sgao.academics@gmail.com  
-GitHub: https://github.com/sgao-academics/causalscale
+MIT. Author: Shuaidong Gao (ORCID: 0009-0004-5641-3581).
