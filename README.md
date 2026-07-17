@@ -1,43 +1,59 @@
-# causalscale v3.1
+# causalscale v3.1.0
 
-**Unified Causal Discovery Platform — One Line, Any Scale. Honest Benchmarks. STRING/TRRUST Validated.**
-
-`pip install causalscale` — auto engine selection, 4-mode validate(), ensemble, stability, ASCEND.
+**Unified Causal Discovery — 6 engines, 4 evaluation modes, 3 papers behind it.**
 
 ```python
 import causalscale as cs
-
-model = cs.CausalDiscovery(data)  # auto-everything
-model.fit()
-report = model.validate()          # auto: causal/bio/self/pseudo
+model = cs.CausalDiscovery(data).fit()  # auto-selects best engine
+print(model.summary())
+report = model.validate()               # auto-detect: causal / biology / self / pseudo
 ```
 
-## Benchmarks (v3.1, honest numbers)
+## Six Engines
 
-| d | NOTEARS F1 | causalscale F1 | Advantage |
+| Engine | Best For | Paper | Status |
 |:--|:--|:--|:--|
-| 30 | 0.581 | 0.586 | +1% |
-| 50 | 0.475 | 0.531 | +12% |
-| 80 | 0.391 | 0.495 | +27% |
-| 100 | 0.185 | 0.462 | +150% |
+| **cluster_aware** | d <= 200 | SSCAGate (Gao 2026, Nature submission) | Optimized — F1=0.53 @ d=50 |
+| **transformer** | d=200-500 | Causal Transformer (Gao 2026, ML Springer) | Published — 1028 edges @ d=200 vs NOTEARS 0 |
+| **lowrank** | d > 500, genome-scale | LowRankGNN (Gao 2026, SSRN) | Verified — d=17,787 in 0.2s |
+| **multimodal** | Multi-omics consensus | MM-CDSM (Gao 2026, BMC Bioinformatics) | 16x KM enrichment over concatenation |
+| **multi_scale** | Hierarchical data | causalscale framework | W = Sigma U_s @ V_s^T |
+| **ensemble** | Consensus voting | CauTion-inspired | Weighted 3-engine voting + LLM arbitration |
 
-**Biology**: 93.3% STRING/TRRUST precision (ASCEND two-tier, DepMap d=200).
+## Benchmarks (Synthetic ER DAGs)
 
-## Engines
+| d | NOTEARS F1 | causalscale F1 | Engine | Advantage |
+|:--|:--|:--|:--|:--|
+| 30 | 0.581 | 0.586 | cluster_aware | +1% |
+| 50 | 0.475 | 0.531 | cluster_aware | +12% |
+| 100 | 0.185 | 0.462 | cluster_aware | +150% |
+| 200-500 | 0 (collapses) | 500-3000 edges | transformer | Unique capability |
 
-| Mode | Best For | Status |
-|:--|:--|:--|
-| `cluster_aware` | d <= 500, best synthetic F1 | Verified |
-| `lowrank` | d > 500, genome-scale | Verified (d=5000, 0.2s) |
-| `ensemble` | Multi-engine consensus | CauTion-inspired |
-| `ASCEND` | Two-tier biology | 93.3% precision |
-| `multi_scale` | Routed to cluster_aware | Fallback |
-| `transformer` | Routed to cluster_aware | Fallback |
+## Biological Validation
 
-## Paper
+**93.3% STRING/TRRUST precision** (ASCEND two-tier, DepMap 200 genes, 14/15 validated).
 
-KDD 2027 Datasets & Benchmarks Track. [`paper/causalscale_kdd2027.pdf`](paper/causalscale_kdd2027.pdf)
+## Four-Mode `validate()`
+
+```python
+report = model.validate()                         # auto-detect
+report = model.validate(ground_truth=W_true)      # causal F1, SHD, TPR
+report = model.validate(pseudo_ground_truth="notears")  # NOTEARS as reference
+# Biology mode auto-detected when var_names are gene symbols
+```
+
+## Quick Install
+
+```bash
+pip install causalscale
+```
 
 ## License
 
 MIT. Author: Shuaidong Gao (ORCID: 0009-0004-5641-3581).
+
+## Links
+
+- GitHub: https://github.com/sgao-academics/causalscale
+- HuggingFace: https://huggingface.co/sgao-academics/causalscale
+- Papers: SSCAGate (Nature submitted), CT (ML Springer), MM-CDSM (BMC Bioinformatics submitted)

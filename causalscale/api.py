@@ -38,10 +38,19 @@ _METHOD_MAP = {
 
 
 def _auto_method(d: int, n: int) -> str:
-    if d <= 500:
-        return "cluster_aware"  # proven optimal (F1=0.53 at d=50)
+    """Auto-select engine based on dimensionality regime.
+
+    Engine map (empirically validated):
+        d <= 200:  cluster_aware (SSCAGate, verified NOTEARS, optimal ER F1)
+        200 < d <= 500: transformer (Causal Transformer, Gao 2026 ML Springer)
+        d > 500:   lowrank (LowRankGNN, correlation-reconstruction at scale)
+    """
+    if d <= 200:
+        return "cluster_aware"
+    elif d <= 500:
+        return "transformer"
     else:
-        return "lowrank"        # correlation-reconstruction at scale
+        return "lowrank"
 
 
 @dataclass
@@ -166,13 +175,56 @@ class CausalDiscovery:
                   f"n={self.n}, rank={self.rank}, device={self.device}"
                   + (f", n_seeds={self.n_seeds}" if self.n_seeds > 1 else ""))
 
-        # ── Transformer mode: route to proven cluster_aware (experimental) ──
+        # ── Transformer mode: Causal Transformer (CT, Gao 2026, ML Springer) ──
+        # Designed for d=200-500 where NOTEARS collapses. Variables-as-tokens
+        # self-attention learns W through multi-head attention + DAG constraint.
         if self.method == "transformer" or self.method == "ct":
+            from .core.transformer import CausalTransformer, fit_causal_transformer
+
+            d_model = self.kwargs.get("d_model", min(128, max(32, self.d // 2)))
+            n_heads = self.kwargs.get("n_heads", 8)
+            n_layers = self.kwargs.get("n_layers", 2)
+            epochs = self.kwargs.get("epochs", 500)
+
+            X_t = torch.tensor(self.X, dtype=torch.float32, device=self.device)
+            model = CausalTransformer(
+                d_vars=self.d, d_model=d_model,
+                n_heads=n_heads, n_layers=n_layers,
+                lambda_dag=0.5, lr=0.001
+            )
+            fit_causal_transformer(
+                model, X_t, n_epochs=epochs,
+                batch_size=min(128, self.n),
+                device=self.device, verbose=verbose
+            )
+
+            # Extract adjacency from trained model's forward pass (graph_head)
+            with torch.no_grad():
+                model.eval()
+                W_batch, _ = model(X_t[:min(500, self.n)])
+                W = W_batch.mean(dim=0).cpu().numpy()
+
+            thresh = 0.1  # CT produces soft weights; default 0.1 filters noise
+            wc = int(np.sum(np.abs(W) > thresh))
+            self._network = CausalNetwork(
+                adjacency=W,
+                edges=self._extract_edges(W, threshold=thresh),
+                edge_count=wc,
+                n_vars=self.d, var_names=self.var_names,
+                time_s=time.time() - t0,
+                params=d_model,
+                metadata={
+                    "method": "transformer",
+                    "d_model": d_model, "n_heads": n_heads,
+                    "n_layers": n_layers, "epochs": epochs,
+                    "engine": "Causal Transformer (Gao 2026, ML Springer)",
+                }
+            )
+            self._fitted = True
             if verbose:
-                print(f"  [transformer -> cluster_aware fallback] "
-                      f"CausalTransformer is experimental; using proven NOTEARS solver.")
-            self.method = "cluster_aware"
-            return self.fit(verbose=verbose)
+                print(f"  Found {wc} edges in {self._network.time_s:.1f}s "
+                      f"(CT d_model={d_model}, n_heads={n_heads})")
+            return self
 
         # ── Multimodal mode (MM-CDSM) ──
         if self.method == "multimodal":

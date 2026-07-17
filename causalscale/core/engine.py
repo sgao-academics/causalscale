@@ -261,12 +261,6 @@ class CausalDiscoveryEngine:
         self.config.n = n
         self.config.d = d
 
-        # Multi-scale fallback: underperforms on ER, use proven solver
-        if self.config.mode == 'multi_scale':
-            if self.config.verbose:
-                print("  [multi_scale -> cluster_aware fallback]")
-            self.config.mode = 'cluster_aware'
-
         if self.config.verbose:
             print(f"\n{'='*60}")
             print(f"FITTING: n={n}, d={d}, mode={self.config.mode}")
