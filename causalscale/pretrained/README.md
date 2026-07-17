@@ -11,7 +11,7 @@ tags:
 - tabular
 ---
 
-# causalscale v3.1.0
+# causalscale v3.2.0
 
 **Unified Causal Discovery -- 7 engines, automatic selection, genome-scale capability.**
 

@@ -22,8 +22,8 @@ with open("README.md", encoding="utf-8") as f:
 
 setup(
     name="causalscale",
-    version="3.1.0",
-    description="Unified Causal Discovery Platform — 7 engines (DAGMA, SSCAGate, Causal Transformer, LowRankGNN, MultiScale, MultiModal, Ensemble), auto-selection, genome-scale",
+    version="3.2.0",
+    description="Unified Causal Discovery Platform — 7 engines (DAGMA, ClusterAware, Causal Transformer, LowRankGNN, MultiScale, MultiModal, Ensemble), auto-selection, genome-scale",
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="Shuaidong Gao",

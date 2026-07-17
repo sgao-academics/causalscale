@@ -1,4 +1,4 @@
-"""causalscale V3.1: Unified Causal Discovery Platform.
+"""causalscale V3.2: Unified Causal Discovery Platform.
 
 Core API:
     import causalscale as cs
@@ -28,7 +28,7 @@ from .core.transformer import CausalTransformer
 from .core.multimodal import MultiModalNOTEARS
 from .pretrained import validate_against_string
 
-__version__ = "3.1.0"
+__version__ = "3.2.0"
 __author__ = "Shuaidong Gao (ORCID: 0009-0004-5641-3581)"
 
 __all__ = [

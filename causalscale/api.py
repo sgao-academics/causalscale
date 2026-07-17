@@ -1,4 +1,4 @@
-"""causalscale V3.1.0 — Unified Causal Discovery API
+"""causalscale V3.2.0 — Unified Causal Discovery API
 Backed by CausalDiscoveryEngine V2 (dual-patent).
 
 Usage:
@@ -71,7 +71,7 @@ class CausalNetwork:
 
 
 class CausalDiscovery:
-    """One-line causal discovery engine (V3.1.0).
+    """One-line causal discovery engine (V3.2.0).
 
     Backed by CausalDiscoveryEngine V2 with:
     - Adaptive rank selection (spectral + AIC/BIC + pruning)

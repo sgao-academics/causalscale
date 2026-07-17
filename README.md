@@ -1,4 +1,4 @@
-# causalscale v3.1.0
+# causalscale v3.2.0
 
 **Unified Causal Discovery — 7 engines, automatic selection, genome-scale capability.**
 
@@ -52,7 +52,7 @@ python run_all.py --verify  # one-command reproduction
 
 - **GitHub**: https://github.com/sgao-academics/causalscale
 - **HuggingFace**: https://huggingface.co/sgao-academics/causalscale
-- **KDD 2027** (Datasets & Benchmarks Track): causalscale v3.1.0
+- **KDD 2027** (Datasets & Benchmarks Track): causalscale v3.2.0
 
 ## License
 
