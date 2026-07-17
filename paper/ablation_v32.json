@@ -1,0 +1,96 @@
+{
+  "ensemble_ablation": [
+    {
+      "d": 30,
+      "best_weights": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "best_f1": 0.409,
+      "default_f1": 0.288
+    },
+    {
+      "d": 50,
+      "best_weights": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "best_f1": 0.485,
+      "default_f1": 0.396
+    },
+    {
+      "d": 100,
+      "best_weights": [
+        2.0,
+        1.0,
+        1.0
+      ],
+      "best_f1": 0.541,
+      "default_f1": 0.389
+    }
+  ],
+  "crossover_analysis": [
+    {
+      "transition": "ClusterAware->CT",
+      "d": 190,
+      "cluster_aware_f1": 0.521,
+      "lowrank_f1": 0.122
+    },
+    {
+      "transition": "ClusterAware->CT",
+      "d": 195,
+      "cluster_aware_f1": 0.52,
+      "lowrank_f1": 0.165
+    },
+    {
+      "transition": "ClusterAware->CT",
+      "d": 200,
+      "cluster_aware_f1": 0.482,
+      "lowrank_f1": 0.184
+    },
+    {
+      "transition": "ClusterAware->CT",
+      "d": 205,
+      "cluster_aware_f1": null,
+      "lowrank_f1": 0.155
+    },
+    {
+      "transition": "ClusterAware->CT",
+      "d": 210,
+      "cluster_aware_f1": null,
+      "lowrank_f1": 0.094
+    },
+    {
+      "transition": "CT->LowRank",
+      "d": 490,
+      "cluster_aware_f1": null,
+      "lowrank_f1": 0.113
+    },
+    {
+      "transition": "CT->LowRank",
+      "d": 495,
+      "cluster_aware_f1": null,
+      "lowrank_f1": 0.125
+    },
+    {
+      "transition": "CT->LowRank",
+      "d": 500,
+      "cluster_aware_f1": null,
+      "lowrank_f1": 0.096
+    },
+    {
+      "transition": "CT->LowRank",
+      "d": 505,
+      "cluster_aware_f1": null,
+      "lowrank_f1": 0.119
+    },
+    {
+      "transition": "CT->LowRank",
+      "d": 510,
+      "cluster_aware_f1": null,
+      "lowrank_f1": 0.123
+    }
+  ]
+}
