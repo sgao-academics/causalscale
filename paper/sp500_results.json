@@ -1,0 +1,33 @@
+{
+  "method": "cluster_aware",
+  "d": 180,
+  "n": 250,
+  "edges": 25,
+  "runtime_s": 16.3,
+  "same_sector_pct": 76.0,
+  "cross_sector_pct": 24.0,
+  "top_sector_pairs": {
+    "Tech <-> Tech": 5,
+    "Financials <-> Financials": 4,
+    "Consumer <-> Consumer": 4,
+    "Energy <-> Energy": 3,
+    "Comm <-> Financials": 2,
+    "Comm <-> Tech": 2,
+    "Industrials <-> Industrials": 1,
+    "Comm <-> Comm": 1
+  },
+  "sample_edges": [
+    "  UNP -> NSC (w=0.5190, Industrials -> Industrials)",
+    "  WBD -> SPGI (w=-0.5187, Comm -> Financials)",
+    "  AMAT -> LRCX (w=0.4982, Tech -> Tech)",
+    "  SPGI -> MCO (w=0.4863, Financials -> Financials)",
+    "  EA -> AMAT (w=0.4633, Comm -> Tech)",
+    "  V -> MA (w=0.4631, Financials -> Financials)",
+    "  KMI -> WMB (w=0.4496, Energy -> Energy)",
+    "  HLT -> MAR (w=0.4469, Consumer -> Consumer)",
+    "  LEN -> DHI (w=0.4451, Consumer -> Consumer)",
+    "  LOW -> HD (w=0.4405, Consumer -> Consumer)",
+    "  PSX -> MPC (w=0.4182, Energy -> Energy)",
+    "  T -> VZ (w=0.4069, Comm -> Comm)"
+  ]
+}
