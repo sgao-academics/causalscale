@@ -23,7 +23,7 @@ with open("README.md", encoding="utf-8") as f:
 setup(
     name="causalscale",
     version="3.1.0",
-    description="Unified Causal Discovery Platform — LowRankGNN + SSCAGate + MultiScale + Counterfactual",
+    description="Unified Causal Discovery Platform — 7 engines (DAGMA, SSCAGate, Causal Transformer, LowRankGNN, MultiScale, MultiModal, Ensemble), auto-selection, genome-scale",
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="Shuaidong Gao",
@@ -45,6 +45,7 @@ setup(
         "matplotlib>=3.7",
         "networkx>=3.0",
         "tqdm>=4.65",
+        "dagma>=0.1",
     ],
     extras_require={
         "web": ["streamlit>=1.28", "plotly>=5.15"],

@@ -1,5 +1,0 @@
-f=open(r"C:\Users\高帅东\Desktop\causalscale\paper\scripts\_smoke_test.py","r",encoding="utf-8"); c=f.read(); f.close()
-c=c.replace('(500, "multi_scale")', '(500, "cluster_aware")')
-c=c.replace('# multi_scale deprecated', '')
-f=open(r"C:\Users\高帅东\Desktop\causalscale\paper\scripts\_smoke_test.py","w",encoding="utf-8"); f.write(c); f.close()
-print("Fixed")

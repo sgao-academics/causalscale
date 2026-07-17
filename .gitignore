@@ -16,3 +16,32 @@ causalscale.egg-info/
 paper/jmlr.zip
 pan_cancer_scan.py
 .pytest_cache/
+
+# ---- 🔴 DO NOT COMMIT ----
+# Paper manuscript, cover letter, and compiled PDFs
+paper/causalscale_kdd2027.pdf
+paper/causalscale_kdd2027.tex
+paper/03_Cover_Letter.pdf
+paper/03_Cover_Letter.tex
+paper/causalscale_Replication_Package.zip
+paper/comment.cut
+paper/memory_scaling.json
+paper/ablation_results.json
+paper/dagma_benchmark.json
+
+# Temporary audit scripts (paper/)
+paper/_check.py
+paper/_fix_verbatim.py
+paper/_reorder.py
+paper/scripts/_*.py
+paper/scripts/_*.txt
+
+# Old MLOSS paper (deleted)
+paper/causalscale_mloss.pdf
+paper/causalscale_mloss.tex
+paper/cover_letter_mloss.tex
+paper/refs_mloss.bib
+
+# Build/replication temp
+_build_replication.py
+figures/

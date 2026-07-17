@@ -27,6 +27,7 @@ _METHOD_MAP = {
     "multi_scale": "multi_scale",
     "cluster_aware": "cluster_aware",
     "gate": "cluster_aware",
+    "dagma": "dagma",
     "transformer": "transformer",
     "ct": "transformer",
     "multimodal": "multimodal",
@@ -41,11 +42,14 @@ def _auto_method(d: int, n: int) -> str:
     """Auto-select engine based on dimensionality regime.
 
     Engine map (empirically validated):
-        d <= 200:  cluster_aware (SSCAGate, verified NOTEARS, optimal ER F1)
+        d <= 150:  dagma (strongest low-dimensional F1, Table 1)
+        150 < d <= 200: cluster_aware (DAGMA times out, NOTEARS viable)
         200 < d <= 500: transformer (Causal Transformer, Gao 2026 ML Springer)
         d > 500:   lowrank (LowRankGNN, correlation-reconstruction at scale)
     """
-    if d <= 200:
+    if d <= 150:
+        return "dagma"
+    elif d <= 200:
         return "cluster_aware"
     elif d <= 500:
         return "transformer"
