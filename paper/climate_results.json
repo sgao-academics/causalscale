@@ -1,0 +1,104 @@
+{
+  "domain": "climate (ENSO teleconnection)",
+  "source": "NOAA NCEP Reanalysis air.mon.mean (1948-2025)",
+  "n_months": 360,
+  "d_stations": 19,
+  "n_edges": 18,
+  "enso_source_edges": 2,
+  "enso_teleconnection_edges": 0,
+  "regional_edges": 15,
+  "time_s": 12.0,
+  "top_edges": [
+    [
+      "Nino34_W",
+      "EqPac_C",
+      0.808
+    ],
+    [
+      "Gulf_AK",
+      "Aleut_E",
+      0.803
+    ],
+    [
+      "Seattle",
+      "BC",
+      0.782
+    ],
+    [
+      "EqPac_C",
+      "Nino34_E",
+      0.777
+    ],
+    [
+      "NYC",
+      "Chicago",
+      0.769
+    ],
+    [
+      "LA",
+      "SoCal",
+      0.706
+    ],
+    [
+      "SF",
+      "SoCal",
+      0.692
+    ],
+    [
+      "Denver",
+      "LA",
+      0.62
+    ],
+    [
+      "Denver",
+      "Chicago",
+      0.583
+    ],
+    [
+      "Japan_C",
+      "Japan_N",
+      0.568
+    ],
+    [
+      "Aleut_E",
+      "BC",
+      0.521
+    ],
+    [
+      "SoCal",
+      "Seattle",
+      0.454
+    ],
+    [
+      "Aleut_W",
+      "SoCal",
+      0.423
+    ],
+    [
+      "Aleut_E",
+      "Aleut_W",
+      0.405
+    ],
+    [
+      "BC",
+      "NYC",
+      -0.377
+    ],
+    [
+      "Japan_N",
+      "Nino34_W",
+      0.36
+    ],
+    [
+      "Aleut_W",
+      "Hawaii",
+      0.345
+    ],
+    [
+      "Barrow",
+      "Aleut_E",
+      0.339
+    ]
+  ],
+  "teleconnection_edges": []
+}
