@@ -1,3 +1,18 @@
+---
+language: en
+license: mit
+library_name: causalscale
+tags:
+- causal-discovery
+- genomics
+- dag
+- low-rank
+- structure-learning
+- benchmark
+- pytorch
+- python
+---
+
 # causalscale v3.2.0
 
 **Unified causal discovery — 7 engines under one API, from d=30 to genome-wide.** `pip install causalscale`.
