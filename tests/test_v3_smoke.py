@@ -2,7 +2,7 @@
 import sys, os, time, warnings
 warnings.filterwarnings('ignore')
 
-sys.path.insert(0, r'C:\Users\高帅东\Desktop\causalscale')
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import numpy as np
 import causalscale as cs
 
@@ -59,5 +59,5 @@ assert net.edge_count > 0, "No edges in auto mode"
 print("\n" + m.summary())
 
 print("\n" + "=" * 50)
-print("ALL 4 MODES PASSED: causalscale V3.0.0")
+print("ALL 4 MODES PASSED: causalscale V3.3.0")
 print("=" * 50)

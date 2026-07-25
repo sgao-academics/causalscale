@@ -1,5 +1,6 @@
-"""causalscale V3.2.0 — Unified Causal Discovery API
-Backed by CausalDiscoveryEngine V2 (dual-patent).
+"""causalscale V3.3.0 — Unified Causal Discovery API
+11 engines under one API: DAGMA, ClusterAware, Causal Transformer, LowRankGNN,
+MultiBatch, LLMPrior, BayesLowRank, scCausal, MultiScale, MultiModal, Ensemble.
 
 Usage:
     import causalscale as cs
@@ -35,6 +36,10 @@ _METHOD_MAP = {
     "full": "full",
     "auto": "auto",
     "ensemble": "ensemble",
+    "multibatch": "multibatch",
+    "llm_prior": "llm_prior",
+    "bayes_lowrank": "bayes_lowrank",
+    "sc_causal": "sc_causal",
 }
 
 
@@ -71,7 +76,7 @@ class CausalNetwork:
 
 
 class CausalDiscovery:
-    """One-line causal discovery engine (V3.2.0).
+    """One-line causal discovery engine (V3.3.0).
 
     Backed by CausalDiscoveryEngine V2 with:
     - Adaptive rank selection (spectral + AIC/BIC + pruning)
@@ -278,6 +283,22 @@ class CausalDiscovery:
         # ── Ensemble mode: multi-engine consensus voting (CauTion-inspired) ──
         if self.method == "ensemble":
             return self._fit_ensemble(verbose)
+
+        # ── MultiBatch mode: dataset-specific residual adapters ──
+        if self.method == "multibatch":
+            return self._fit_multibatch(verbose)
+
+        # ── LLMPrior mode: external edge prior injection ──
+        if self.method == "llm_prior":
+            return self._fit_llm_prior(verbose)
+
+        # ── BayesLowRank mode: Bayesian bootstrap ensemble ──
+        if self.method == "bayes_lowrank":
+            return self._fit_bayes_lowrank(verbose)
+
+        # ── scCausal mode: single-cell skeleton discovery ──
+        if self.method == "sc_causal":
+            return self._fit_sc_causal(verbose)
 
         # ── V2 Engine modes (lowrank, multi_scale, cluster_aware, full) ──
         if self._engine is None:
@@ -572,6 +593,95 @@ class CausalDiscovery:
 
         return self
 
+    def _fit_multibatch(self, verbose: bool) -> "CausalDiscovery":
+        """MultiBatch: dataset-specific residual adapters."""
+        import time as _time
+        from .core.multibatch_engine import fit_multibatch
+        extra_data = self.kwargs.get("extra_data", [])
+        if not extra_data:
+            if verbose:
+                print("  MultiBatch requires extra_data=[X1, X2, ...]. Falling back to cluster_aware.")
+            self.method = "cluster_aware"
+            self._init_engine()
+            return self._fit_single(verbose)
+        data_list = [self.X] + [np.asarray(d, dtype=np.float32) for d in extra_data]
+        t0 = _time.time()
+        W, meta = fit_multibatch(data_list,
+                                 threshold=self.kwargs.get("threshold", 0.3),
+                                 verbose=verbose)
+        net = CausalNetwork(
+            adjacency=W, edges=self._extract_edges(W),
+            edge_count=meta["shared_edges"],
+            n_vars=self.d, var_names=self.var_names,
+            time_s=_time.time() - t0, params=self.rank,
+            metadata={"method": "multibatch", **meta}
+        )
+        self._network = net; self._fitted = True
+        return self
+
+    def _fit_llm_prior(self, verbose: bool) -> "CausalDiscovery":
+        """LLMPrior: STRING-derived edge prior injection."""
+        import time as _time
+        from .core.llm_prior_engine import fit_llm_prior
+        W_prior = self.kwargs.get("W_prior", None)
+        t0 = _time.time()
+        W, meta = fit_llm_prior(self.X, W_prior=W_prior,
+                                lambda_p=self.kwargs.get("lambda_p", 0.1),
+                                threshold=self.kwargs.get("threshold", 0.3),
+                                verbose=verbose)
+        net = CausalNetwork(
+            adjacency=W, edges=self._extract_edges(W),
+            edge_count=meta["edges"],
+            n_vars=self.d, var_names=self.var_names,
+            time_s=_time.time() - t0, params=self.rank,
+            metadata={"method": "llm_prior", **meta}
+        )
+        self._network = net; self._fitted = True
+        return self
+
+    def _fit_bayes_lowrank(self, verbose: bool) -> "CausalDiscovery":
+        """BayesLowRank: Bayesian bootstrap ensemble for low-rank causal discovery."""
+        import time as _time
+        from .core.bayes_lowrank_engine import fit_bayes_lowrank
+        t0 = _time.time()
+        W, edge_probs, meta = fit_bayes_lowrank(
+            self.X,
+            rank=self.rank,
+            n_bootstrap=self.kwargs.get("n_bootstrap", 20),
+            threshold=self.kwargs.get("threshold", 0.3),
+            device=self.device,
+            verbose=verbose
+        )
+        net = CausalNetwork(
+            adjacency=W, edges=self._extract_edges(W),
+            edge_count=meta["edges"],
+            n_vars=self.d, var_names=self.var_names,
+            time_s=_time.time() - t0, params=meta["rank"],
+            metadata={"method": "bayes_lowrank", "edge_probs": edge_probs, **meta}
+        )
+        self._network = net; self._fitted = True
+        return self
+
+    def _fit_sc_causal(self, verbose: bool) -> "CausalDiscovery":
+        """scCausal: Single-cell skeleton discovery with NB-LR CI test."""
+        import time as _time
+        from .core.sc_causal_engine import fit_sc_causal
+        t0 = _time.time()
+        W, meta = fit_sc_causal(self.X,
+                                alpha=self.kwargs.get("alpha", 0.05),
+                                max_cond=self.kwargs.get("max_cond", 1),
+                                verbose=verbose)
+        net = CausalNetwork(
+            adjacency=W, edges=self._extract_edges(W, threshold=0.5),
+            edge_count=meta["edges"],
+            is_dag=meta["is_dag"],
+            n_vars=self.d, var_names=self.var_names,
+            time_s=_time.time() - t0, params=0,
+            metadata={"method": "sc_causal", **meta}
+        )
+        self._network = net; self._fitted = True
+        return self
+
     def _arbitrate_disagreements(
         self, engines_to_run, adjacencies, threshold,
         consensus_W, n_consensus, disagreement, total_time, verbose
@@ -695,7 +805,7 @@ class CausalDiscovery:
             return "Not fitted."
         net = self._network
         lines = [
-            f"CausalDiscovery V3 Summary",
+            f"CausalDiscovery V3.3 Summary",
             f"{'='*40}",
             f"Method: {self.method}",
             f"Variables: {self.d}",
@@ -703,6 +813,10 @@ class CausalDiscovery:
             f"Rank: {net.params}",
             f"Edges: {net.edge_count}",
             f"Time: {net.time_s:.1f}s",
+            f"",
+            f"NOTE: Causal discovery from observational data cannot replace",
+            f"randomized experiments. All edges are statistical candidates",
+            f"requiring domain validation.",
         ]
         if net.metadata.get("convergence"):
             c = net.metadata["convergence"]

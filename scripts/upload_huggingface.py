@@ -34,12 +34,12 @@ tags:
   - dag
   - genomics
   - drug-sensitivity
-  - iclr-2027
+  - kdd-2027
 ---
 
 # causalscale: One-Line Causal Discovery Engine
 
-Pre-trained causal backbones from the LowRankGNN paper (ICLR 2027).
+Pre-trained causal backbones from the causalscale paper (KDD 2027).
 
 ## Models
 
@@ -80,10 +80,10 @@ W = sachs["U"] @ sachs["V"].T
 ## Citation
 
 ```bibtex
-@inproceedings{{gao2026lowrank,
-  title={{Low-Rank Factorization Enables Genome-Scale Causal Discovery}},
+@inproceedings{{gao2026causalscale,
+  title={{causalscale: Scaling Differentiable Causal Discovery to Genome-Wide Resolution}},
   author={{Gao, Shuaidong}},
-  booktitle={{ICLR}},
+  booktitle={{KDD}},
   year={{2027}}
 }}
 ```

@@ -1,4 +1,4 @@
-"""causalscale V3.2: Unified Causal Discovery Platform.
+"""causalscale V3.3: Unified Causal Discovery Platform — 11 engines under one API.
 
 Core API:
     import causalscale as cs
@@ -10,13 +10,18 @@ Core API:
     edges = model.get_edges()
     result = cs.validate_against_string(edges)
 
-Engines (6 methods):
-    lowrank       — W = U @ V^T (d up to 100M)
-    multi_scale   — W = sum U_s @ V_s^T (hierarchical)
-    cluster_aware — Joint W + cluster (CAGate/SSCAGate)
-    transformer   — Causal Transformer (attention-based)
+Engines (11 methods):
+    dagma         — DAGMA (log-det acyclicity, d <= 150)
+    cluster_aware — Verified NOTEARS with exact DAG constraint (d <= 200)
+    transformer   — Causal Transformer (attention-based, d=200-500)
+    lowrank       — LowRankGNN W = U @ V^T (genome-scale)
+    multibatch    — Dataset-specific residual adapters
+    llm_prior     — STRING-derived edge prior injection
+    bayes_lowrank — Bayesian bootstrap + low-rank DAG (uncertainty)
+    sc_causal     — NB-LR CI test for single-cell RNA-seq
+    multiscale    — Multi-scale low-rank decomposition
     multimodal    — MM-CDSM (multi-omics consensus)
-    full          — All + uncertainty + counterfactual
+    ensemble      — Weighted multi-engine voting
 """
 
 from .api import CausalDiscovery, CausalNetwork
@@ -28,7 +33,7 @@ from .core.transformer import CausalTransformer
 from .core.multimodal import MultiModalNOTEARS
 from .pretrained import validate_against_string
 
-__version__ = "3.2.0"
+__version__ = "3.3.0"
 __author__ = "Shuaidong Gao (ORCID: 0009-0004-5641-3581)"
 
 __all__ = [

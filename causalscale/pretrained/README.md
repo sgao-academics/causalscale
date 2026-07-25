@@ -11,9 +11,9 @@ tags:
 - tabular
 ---
 
-# causalscale v3.2.0
+# causalscale v3.3.0
 
-**Unified Causal Discovery -- 7 engines, automatic selection, genome-scale capability.**
+**Unified Causal Discovery -- 11 engines, automatic selection, genome-scale capability.**
 
 ## Benchmarks (Synthetic ER DAGs, 5 seeds)
 
@@ -36,7 +36,7 @@ tags:
 
 S&P 500: 76% same-sector edges (19/25).
 
-## Seven Engines
+## Eleven Engines
 
 | Engine | Best For | Key Result |
 |:--|:--|:--|

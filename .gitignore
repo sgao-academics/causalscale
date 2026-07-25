@@ -14,7 +14,6 @@ causalscale.egg-info/
 *.snm
 *.vrb
 paper/jmlr.zip
-pan_cancer_scan.py
 .pytest_cache/
 
 # ---- 🔴 DO NOT COMMIT ----
@@ -35,6 +34,7 @@ paper/_fix_verbatim.py
 paper/_reorder.py
 paper/scripts/_*.py
 paper/scripts/_*.txt
+paper/scripts/gen_figures/_*.py
 
 # Old MLOSS paper (deleted)
 paper/causalscale_mloss.pdf
@@ -44,4 +44,8 @@ paper/refs_mloss.bib
 
 # Build/replication temp
 _build_replication.py
+_smoke_v33.py
+_upload_hf_v33.py
+_fix_hardcoded_paths.py
+*.bak
 figures/

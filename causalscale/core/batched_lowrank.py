@@ -1,5 +1,5 @@
 """
-Batched LowRankGNN (v3.2.0) — Top-K Correlation + FP16 + Two-Stage.
+Batched LowRankGNN (v3.3.0) — Top-K Correlation + FP16 + Two-Stage.
 
 Solves the O(d^2) bottleneck via top-k sparse correlation:
 instead of storing the full d x d matrix, only keep the top K strongest
@@ -121,7 +121,7 @@ def train_sparse_lowrank(
 ) -> dict:
     """Train LowRankGNN using only top-K correlation pairs (O(K) memory).
 
-    This is the v3.2.0 solution to the O(d^2) correlation bottleneck:
+    This is the v3.3.0 solution to the O(d^2) correlation bottleneck:
     - Compute top-K strongest absolute correlations via chunked streaming
     - Train FP16 UV^T to reconstruct only those K pairs (sparse loss)
     - Memory: O(K) instead of O(d^2)

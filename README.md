@@ -11,20 +11,105 @@ tags:
 - benchmark
 - pytorch
 - python
+- pretrained
+- multi-engine
 ---
 
-# causalscale v3.2.0
+# causalscale v3.3.0 Replication Package
 
-**Unified causal discovery — 7 engines under one API, from d=30 to genome-wide.** `pip install causalscale`.
+**11 engines. d=30 to 17,787. 3 modalities. 33 cancers. 92% test coverage.**
 
-```python
-import causalscale as cs
-model = cs.CausalDiscovery(data, method="auto")  # auto-selects best engine
-model.fit()
-print(model.summary())
+> This replication package accompanies the KDD 2027 Datasets & Benchmarks submission.
+> It contains all source code, pre-computed results, figures, and one-click reproduction.
+
+## Quick Start (3 commands)
+
+```bash
+pip install -e . dagma statsmodels
+python run_all.py --verify      # ~30 sec: validates installation + result integrity
+python run_all.py --figures     # ~10 sec: regenerates all 4 paper figures
 ```
 
-## Seven Engines
+## What's Included
+
+| Directory | Contents |
+|:--|:--|
+| `causalscale/` | Full source code (11 engines, API, CLI, web) |
+| `causalscale/pretrained/` | Pre-trained models (DepMap, TCGA, Sachs) + benchmark JSONs |
+| `causalscale/core/` | 11 engine implementations (see Engine List below) |
+| `results/` | 17 pre-computed result JSON files (all paper tables/figures) |
+| `figures/` | 4 paper figures (PDF + PNG for fig3) |
+| `scripts/gen_figures/` | 4 figure generation scripts |
+| `scripts/` | 6 experiment scripts (benchmark, ablation, scaling, etc.) |
+| `examples/` | 4 Jupyter notebooks (biology, finance, neuroscience, drug discovery) |
+| `tests/` | 3 test files (92% coverage) |
+| `run_all.py` | One-click reproduction script |
+| `download_data.py` | External data download helper |
+| `pan_cancer_scan.py` | 33-cancer TCGA scan script (Table 4) |
+
+## Reproduction Guide
+
+### Verify Installation (30 seconds)
+```bash
+python run_all.py --verify
+```
+Checks: import causalscale, quick d=30 test, result file integrity, figure file integrity, pre-trained models.
+
+### Regenerate All Figures (10 seconds)
+```bash
+python run_all.py --figures
+```
+Runs all 4 `scripts/gen_figures/gen_fig*.py` scripts. Reads from `results/` directory.
+
+### Print All Table Data (instant)
+```bash
+python run_all.py --tables
+```
+Prints cached results for Tables 1, 4, 5, 6 from `results/*.json`.
+
+### Run Synthetic Benchmark (~15 min on GPU)
+```bash
+python run_all.py --benchmark
+```
+Reproduces Table 1 (NOTEARS vs DAGMA vs causalscale, d=30-150, 5 seeds each).
+
+### Run Scaling Experiments (~30 min on GPU)
+```bash
+python run_all.py --scaling
+```
+Reproduces Table 5 (LowRankGNN rank sensitivity, r=8-128).
+
+### Full Reproduction (~1 hour on GPU)
+```bash
+python run_all.py
+```
+Runs benchmark + scaling + ablation.
+
+## Paper-to-Package Cross-Reference
+
+### Tables
+| Paper Table | Data Source | Reproduce With |
+|:--|:--|:--|
+| Table 1: Synthetic DAG F1 | `results/exp1_causalscale_er.json` + `results/dagma_benchmark.json` | `python run_all.py --benchmark` |
+| Table 2: Paired t-test | Computed from Table 1 data | Derivable from `results/exp1_causalscale_er.json` |
+| Table 3: Feature comparison | Static (no computation) | In paper TeX |
+| Table 4: ARID1A-MTOR | `results/pan_cancer_ckpt.json` | `python pan_cancer_scan.py` (needs TCGA data) |
+| Table 5: LowRank scaling | `results/exp9_lowrank_scaling.json` | `python run_all.py --scaling` |
+| Table 6: Memory scaling | `results/memory_scaling.json` | Pre-computed |
+
+### Figures
+| Paper Figure | Script | Output |
+|:--|:--|:--|
+| Fig 1: Architecture | `scripts/gen_figures/gen_fig1_architecture.py` | `figures/fig1_architecture.pdf` |
+| Fig 2: Benchmark | `scripts/gen_figures/gen_fig2_benchmark.py` | `figures/fig2_benchmark.pdf` |
+| Fig 3: ARID1A-MTOR | `scripts/gen_figures/gen_fig3_arid1a_mtor.py` | `figures/fig3_arid1a_mtor.pdf` |
+| Fig 4: Timing/Scaling | `scripts/gen_figures/gen_fig4_timing.py` | `figures/fig4_timing.pdf` |
+
+All 4 figure PDFs are pre-bundled in `figures/`. To regenerate: `python run_all.py --figures`.
+
+## 11 Engines
+
+### Core Engines (dimension-based auto-selection)
 
 | Engine | Best For | Method | Key Result |
 |:--|:--|:--|:--|
@@ -32,39 +117,37 @@ print(model.summary())
 | **cluster_aware** | d <= 200 | Verified NOTEARS with exact DAG constraint | Exceeds NOTEARS at all d, exceeds DAGMA at d=30 |
 | **transformer** | d=200-500 | Causal Transformer (Gao 2026) | 1,028 edges @ d=200, NOTEARS = 0 |
 | **lowrank** | d > 500 | LowRankGNN (Gao 2026) | d=17,787, 88.7% STRING/TRRUST precision |
+
+### Specialized Engines
+
+| Engine | Best For | Method | Key Result |
+|:--|:--|:--|:--|
+| **multibatch** | Multi-dataset | Dataset-specific residual adapters | 0.92 shared-edge precision, 93.3% ASCEND |
+| **llm_prior** | External knowledge | STRING-derived edge prior injection | +12% F1 over vanilla NOTEARS |
+| **bayes_lowrank** | Uncertainty quantification | Bayesian bootstrap + low-rank NOTEARS | ECE 0.003@d=500, 71.4% BRCA STRING |
+| **sc_causal** | Single-cell RNA-seq | NB-LR CI test + PC algorithm | 14.8% PBMC STRING, 35.8% cell-type |
 | **multiscale** | d=500-5,000 | Multi-scale low-rank decomposition | 16x KM enrichment over concatenation |
 | **multimodal** | m >= 2 | Cross-modal Frobenius consensus | Multi-omics causal discovery |
 | **ensemble** | Any | 3-engine weighted voting | F1 exceeds best single engine by 22-35% |
 
-Plus: **PCMCI** time-series engine (Runge et al., Sci. Adv. 2019) for lagged causal discovery.
+Plus: **PCMCI** time-series engine (Runge et al., Sci. Adv. 2019).
 
-## Benchmarks (Synthetic ER DAGs, d=30-150, 5 seeds)
+## External Data (Optional)
 
-| d | NOTEARS F1 | DAGMA F1 | causalscale F1 | Engine |
-|:--|:--|:--|:--|:--|
-| 30 | 0.581 | 0.589 | **0.646** | cluster_aware |
-| 50 | 0.475 | 0.689 | 0.595 | cluster_aware |
-| 80 | 0.391 | 0.896 | 0.731 | cluster_aware |
-| 100 | 0.185 | 0.931 | 0.766 | cluster_aware |
-| 150 | 0.000 | 0.989 | 0.768 | cluster_aware |
-| 200+ | 0 (collapse) | timeout | 500-3,000 edges | transformer / lowrank |
+The pre-computed results in `results/` do NOT require any external data downloads.
+To reproduce experiments that use external biological data:
 
-NOTEARS death-line confirmed at d=150. Only causalscale survives beyond d=200.
+```bash
+python download_data.py --string    # STRING PPI + TRRUST (for validate_against_string)
+python download_data.py --tcga       # TCGA gene expression (for pan_cancer_scan.py)
+python download_data.py --depmap     # DepMap CRISPR (for genome-scale)
+```
 
-## Biological Validation
-
-**88.7% STRING/TRRUST precision** (574/647 edges) on DepMap genome-scale CRISPR data (1,208 cell lines).
-
-ASCEND two-tier discovery: **93.3%** (14/15 edges, 95% CI [68.0%, 99.8%]).
-
-33-cancer pan-cancer scan recovers tissue-specific ARID1A-MTOR directionality
-(Spearman rho=-0.720, p=2.3e-6; 5.5 minutes on 8 GB GPU).
-
-## Cross-Domain
-
-S&P 500 equities (76% same-sector edges, 180 stocks), NOAA climate reanalysis
-(correct west-to-east ENSO propagation, 19 Pacific stations). Same `fit()`
-call across three independent domains.
+Data sources:
+- TCGA: UCSC Xena (https://xenabrowser.net/)
+- DepMap: Broad Institute (https://depmap.org/, 24Q2 release)
+- STRING PPI v12.0: https://string-db.org/
+- TRRUST v2: https://www.grnpedia.org/trrust/
 
 ## Install
 
@@ -74,14 +157,25 @@ pip install causalscale
 
 GPU auto-detected; CPU fallback supported. Python >=3.10, PyTorch >=2.1.
 
-Full replication package (pre-computed results, figures, one-command verify):
-see `paper/causalscale_Replication_Package.zip` in this repository.
+```bash
+# Full reproduction
+git clone https://github.com/sgao-academics/causalscale
+cd causalscale
+pip install -e .
+python run_all.py --verify
+```
 
-## Links
+## Citation
 
-- **GitHub**: https://github.com/sgao-academics/causalscale
-- **HuggingFace Hub** (pre-trained models): https://huggingface.co/sgao-academics/causalscale
-- **KDD 2027 Datasets & Benchmarks Track**
+```
+@inproceedings{gao2027causalscale,
+  title={causalscale: Scaling Differentiable Causal Discovery to Genome-Wide Resolution},
+  author={Gao, Shuaidong},
+  booktitle={Proceedings of the 33rd ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD)},
+  year={2027},
+  note={Datasets \& Benchmarks Track}
+}
+```
 
 ## License
 

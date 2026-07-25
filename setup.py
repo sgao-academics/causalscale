@@ -1,8 +1,8 @@
-"""causalscale: One-Line Causal Discovery Engine.
+"""causalscale: Unified Causal Discovery Platform — 11 engines under one API.
 
-causalscale wraps the LowRankGNN engine (ICLR 2027) into a single
-pip-installable package that scales causal discovery from d=30 to d=100,000,000
-on consumer GPUs.
+Scales from d=30 to genome-wide (d=17,787) with automatic engine selection.
+Includes DAGMA, ClusterAware, Causal Transformer, LowRankGNN, MultiBatch,
+LLMPrior, BayesLowRank, scCausal, MultiScale, MultiModal, and Ensemble.
 
 Quick Start:
     pip install causalscale
@@ -10,7 +10,6 @@ Quick Start:
     >>> model = cs.CausalDiscovery(data)
     >>> model.fit()
     >>> network = model.get_network()
-    >>> model.plot()
 
 Author: Shuaidong Gao (ORCID: 0009-0004-5641-3581)
 """
@@ -22,12 +21,12 @@ with open("README.md", encoding="utf-8") as f:
 
 setup(
     name="causalscale",
-    version="3.2.0",
-    description="Unified Causal Discovery Platform — 7 engines (DAGMA, ClusterAware, Causal Transformer, LowRankGNN, MultiScale, MultiModal, Ensemble), auto-selection, genome-scale",
+    version="3.3.0",
+    description="Unified Causal Discovery Platform — 11 engines (DAGMA, ClusterAware, CT, LowRankGNN, MultiBatch, LLMPrior, BayesLowRank, scCausal, MultiScale, MultiModal, Ensemble), auto-selection, genome-scale",
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="Shuaidong Gao",
-    author_email="sgao.academics@gmail.com",
+    author_email="gaoshuaidong@stu.cqifs.edu.cn",
     url="https://github.com/sgao-academics/causalscale",
     packages=find_packages(),
     python_requires=">=3.10",

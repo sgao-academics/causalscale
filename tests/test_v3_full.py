@@ -1,8 +1,8 @@
-"""causalscale V3.0.0 Full Smoke Test: All 6 engines."""
-import sys, time, warnings
+"""causalscale V3.3.0 Full Smoke Test: All 11 engines."""
+import sys, os, time, warnings
 warnings.filterwarnings('ignore')
 
-sys.path.insert(0, r'C:\Users\高帅东\Desktop\causalscale')
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import numpy as np
 import causalscale as cs
 

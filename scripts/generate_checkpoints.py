@@ -5,17 +5,18 @@ Creates:
     tcga_pancancer.pt - TCGA 33-cancer summary
     sachs_protein.pt  - Sachs protein signaling
 
-All generated from verified benchmark data in D:/NO.1/.
+All generated from verified benchmark data.
 """
 
 import sys, os, json, torch
 import numpy as np
 
 # Add causalscale to path
-sys.path.insert(0, r"C:\Users\高帅东\Desktop\causalscale")
+PKG_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, PKG_ROOT)
 from causalscale.core.lowrank import LowRankGNN, train_lowrank_gnn
 
-OUT = r"C:\Users\高帅东\Desktop\causalscale\causalscale\pretrained"
+OUT = os.path.join(PKG_ROOT, "causalscale", "pretrained")
 os.makedirs(OUT, exist_ok=True)
 
 # ---------------------------------------------------------------

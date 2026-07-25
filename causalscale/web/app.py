@@ -27,7 +27,7 @@ st.set_page_config(
 )
 
 st.title("causalscale: One-Line Causal Discovery")
-st.caption("From d=30 to d=100,000,000 — LowRankGNN Engine (ICLR 2027)")
+st.caption("From d=30 to d=100,000,000 — LowRankGNN Engine (KDD 2027)")
 
 tab1, tab2, tab3, tab4 = st.tabs(
     ["Upload Data", "Pre-trained Models", "Drug Sensitivity", "About"]
@@ -249,7 +249,7 @@ with tab4:
     st.header("About causalscale")
     st.markdown(
         """
-    **causalscale** wraps the LowRankGNN engine (ICLR 2027) into a
+    **causalscale** wraps 11 causal discovery engines (KDD 2027) into a
     single pip-installable package.
 
     ### Core Technology
@@ -267,10 +267,10 @@ with tab4:
 
     ### Citation
     ```bibtex
-    @inproceedings{gao2026lowrank,
-      title={Low-Rank Factorization Enables Genome-Scale Causal Discovery},
+    @inproceedings{gao2026causalscale,
+      title={causalscale: Scaling Differentiable Causal Discovery to Genome-Wide Resolution},
       author={Gao, Shuaidong},
-      booktitle={ICLR},
+      booktitle={KDD},
       year={2027}
     }
     ```
@@ -282,8 +282,8 @@ with tab4:
     """
     )
 
-st.sidebar.title("causalscale v0.1.0")
-st.sidebar.markdown("ICLR 2027 Oral Edition")
+st.sidebar.title("causalscale v3.3.0")
+st.sidebar.markdown("KDD 2027 Datasets & Benchmarks Track")
 st.sidebar.divider()
 st.sidebar.markdown(
     """

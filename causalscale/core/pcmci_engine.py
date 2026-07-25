@@ -1,5 +1,5 @@
 """
-PCMCI Time-Series Engine (v3.2.0).
+PCMCI Time-Series Engine (v3.3.0).
 
 Integrates Runge et al.'s PCMCI algorithm (Science Advances, 2019) into the
 causalscale ecosystem with standard fit() / get_edges() API.

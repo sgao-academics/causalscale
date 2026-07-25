@@ -1,5 +1,5 @@
 """
-Two-Stage Causal Discovery Pipeline (v3.2.0).
+Two-Stage Causal Discovery Pipeline (v3.3.0).
 
 Strategy: When d is too large for DAG-constrained discovery,
 use the DAG engines (DAGMA/ClusterAware) as a "seed finder"
@@ -145,7 +145,7 @@ def two_stage_discovery(
     Stage 1: DAG engine on top-k variables → seed edges
     Stage 2: For each seed edge, expand neighborhood → LowRankGNN
 
-    This is the v3.2.0 answer to "how to find causal edges at genome scale":
+    This is the v3.3.0 answer to "how to find causal edges at genome scale":
     use the strong-but-small DAG engines as a lens, then LowRankGNN
     as a wide-angle camera on the expanded neighborhood.
 
