@@ -21,7 +21,7 @@ with open("README.md", encoding="utf-8") as f:
 
 setup(
     name="causalscale",
-    version="3.3.0",
+    version="3.4.0",
     description="Unified Causal Discovery Platform — 11 engines (DAGMA, ClusterAware, CT, LowRankGNN, MultiBatch, LLMPrior, BayesLowRank, scCausal, MultiScale, MultiModal, Ensemble), auto-selection, genome-scale",
     long_description=long_description,
     long_description_content_type="text/markdown",
