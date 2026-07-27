@@ -1,6 +1,7 @@
-"""causalscale V3.3.0 — Unified Causal Discovery API
-11 engines under one API: DAGMA, ClusterAware, Causal Transformer, LowRankGNN,
-MultiBatch, LLMPrior, BayesLowRank, scCausal, MultiScale, MultiModal, Ensemble.
+"""causalscale V3.4.0 — Unified Causal Discovery API
+12 engines under one API: DAGMA, ClusterAware, Causal Transformer, LowRankGNN,
+MultiBatch, LLMPrior, BayesLowRank, scCausal, MultiScale, MultiModal, Ensemble,
+Transfer.
 
 Usage:
     import causalscale as cs
@@ -40,6 +41,7 @@ _METHOD_MAP = {
     "llm_prior": "llm_prior",
     "bayes_lowrank": "bayes_lowrank",
     "sc_causal": "sc_causal",
+    "transfer": "transfer",
 }
 
 
@@ -299,6 +301,11 @@ class CausalDiscovery:
         # ── scCausal mode: single-cell skeleton discovery ──
         if self.method == "sc_causal":
             return self._fit_sc_causal(verbose)
+
+        # ── Transfer mode: warm-start cross-dataset causal discovery ──
+        # (Gao 2026, JBCB submitted). Requires source_graph in kwargs.
+        if self.method == "transfer":
+            return self._fit_transfer(verbose)
 
         # ── V2 Engine modes (lowrank, multi_scale, cluster_aware, full) ──
         if self._engine is None:
@@ -680,6 +687,68 @@ class CausalDiscovery:
             metadata={"method": "sc_causal", **meta}
         )
         self._network = net; self._fitted = True
+        return self
+
+    def _fit_transfer(self, verbose: bool) -> "CausalDiscovery":
+        """Transfer: Warm-start causal discovery with cross-dataset graphs.
+
+        Requires source_graph in kwargs (numpy array or .npy path).
+        Optional: method (notears/dagma/golem), threshold, seed.
+        """
+        import time as _time
+        from .core.transfer_engine import fit_transfer
+
+        source_graph = self.kwargs.pop("source_graph", None)
+        if source_graph is None:
+            raise ValueError("Transfer engine requires source_graph= argument "
+                             "(numpy array or path to .npy file)")
+
+        base_method = self.kwargs.pop("transfer_method", "notears")
+        if base_method not in ("notears", "dagma", "golem"):
+            raise ValueError(f"Unknown transfer_method '{base_method}'. "
+                             "Choose: notears, dagma, golem")
+
+        t0 = _time.time()
+        result = fit_transfer(
+            self.X,
+            source_graph=source_graph,
+            method=base_method,
+            threshold=self.kwargs.get("threshold", 0.3),
+            seed=self.kwargs.get("seed", 42),
+            lambda1=self.kwargs.get("lambda1", 0.01),
+            max_iter=self.kwargs.get("max_iter", 35),
+            inner_iter=self.kwargs.get("inner_iter", 200),
+            lr=self.kwargs.get("lr", 0.002),
+            device=self.device,
+            verbose=verbose,
+        )
+
+        # Use warm-start result as primary network
+        net = CausalNetwork(
+            adjacency=result.W_warm,
+            edges=self._extract_edges(result.W_warm, threshold=result.threshold),
+            edge_count=int((np.abs(result.W_warm) > result.threshold).sum()),
+            is_dag=False,
+            n_vars=self.d, var_names=self.var_names,
+            time_s=_time.time() - t0, params=0,
+            metadata={
+                "method": f"transfer_{base_method}",
+                "retention_warm": result.retention_warm,
+                "retention_scratch": result.retention_scratch,
+                "retention_shuffled": result.retention_shuffled,
+                "delta_warm": result.delta_warm,
+                "source_edges": result.source_edges,
+                "edge_overlap_warm": result.edge_overlap_warm,
+                "edge_overlap_scratch": result.edge_overlap_scratch,
+                "edge_overlap_shuffled": result.edge_overlap_shuffled,
+                "converged": result.converged,
+            }
+        )
+        self._network = net; self._fitted = True
+        if verbose:
+            print(f"  Transfer: {result.edge_overlap_warm}/{result.source_edges} edges "
+                  f"({result.retention_warm:.1f}%), "
+                  f"delta=+{result.delta_warm:.1f}pp vs scratch")
         return self
 
     def _arbitrate_disagreements(

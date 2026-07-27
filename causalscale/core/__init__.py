@@ -1,4 +1,4 @@
-"""Core engines: V2 Enterprise + V1 Classic + V3.3 Specialized."""
+"""Core engines: V2 Enterprise + V1 Classic + V3.4 Specialized."""
 from .engine import CausalDiscoveryEngine, EngineConfig, EngineResult
 from .adaptive_rank import AutoRankSelector, estimate_effective_rank
 from .multi_scale import MultiScaleLowRank
@@ -13,6 +13,7 @@ from .multibatch_engine import fit_multibatch
 from .llm_prior_engine import fit_llm_prior
 from .bayes_lowrank_engine import fit_bayes_lowrank
 from .sc_causal_engine import fit_sc_causal
+from .transfer_engine import fit_transfer, TransferResult, _shuffle_graph
 
 __all__ = [
     "CausalDiscoveryEngine", "EngineConfig", "EngineResult",
@@ -27,4 +28,5 @@ __all__ = [
     "ClusterAwareGate", "compute_cluster_gates",
     "fit_multibatch", "fit_llm_prior",
     "fit_bayes_lowrank", "fit_sc_causal",
+    "fit_transfer", "TransferResult", "_shuffle_graph",
 ]

@@ -1,4 +1,4 @@
-"""causalscale V3.3: Unified Causal Discovery Platform — 11 engines under one API.
+"""causalscale V3.4: Unified Causal Discovery Platform — 12 engines under one API.
 
 Core API:
     import causalscale as cs
@@ -10,7 +10,12 @@ Core API:
     edges = model.get_edges()
     result = cs.validate_against_string(edges)
 
-Engines (11 methods):
+    # Transfer learning (new in V3.4)
+    model = cs.CausalDiscovery(target_data, method="transfer",
+                               source_graph=pretrained_W)
+    model.fit()
+
+Engines (12 methods):
     dagma         — DAGMA (log-det acyclicity, d <= 150)
     cluster_aware — Verified NOTEARS with exact DAG constraint (d <= 200)
     transformer   — Causal Transformer (attention-based, d=200-500)
@@ -22,6 +27,7 @@ Engines (11 methods):
     multiscale    — Multi-scale low-rank decomposition
     multimodal    — MM-CDSM (multi-omics consensus)
     ensemble      — Weighted multi-engine voting
+    transfer      — Warm-start transfer with cross-dataset graphs
 """
 
 from .api import CausalDiscovery, CausalNetwork
@@ -31,9 +37,10 @@ from .core.cluster_gate import ClusterAwareGate
 from .core.engine import CausalDiscoveryEngine
 from .core.transformer import CausalTransformer
 from .core.multimodal import MultiModalNOTEARS
+from .core.transfer_engine import fit_transfer, TransferResult
 from .pretrained import validate_against_string
 
-__version__ = "3.3.0"
+__version__ = "3.4.0"
 __author__ = "Shuaidong Gao (ORCID: 0009-0004-5641-3581)"
 
 __all__ = [
@@ -42,5 +49,6 @@ __all__ = [
     "LowRankGNN", "train_lowrank_gnn",
     "dag_constraint", "trace_expm",
     "ClusterAwareGate",
+    "fit_transfer", "TransferResult",
     "validate_against_string",
 ]
