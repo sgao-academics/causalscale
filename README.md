@@ -15,9 +15,9 @@ tags:
 - multi-engine
 ---
 
-# causalscale v3.3.0 Replication Package
+# causalscale v3.4.0 Replication Package
 
-**11 engines. d=30 to 17,787. 3 modalities. 33 cancers. 92% test coverage.**
+**12 engines. d=30 to 17,787. 3 modalities. 33 cancers. 92% test coverage.**
 
 > This replication package accompanies the KDD 2027 Datasets & Benchmarks submission.
 > It contains all source code, pre-computed results, figures, and one-click reproduction.
@@ -34,7 +34,7 @@ python run_all.py --figures     # ~10 sec: regenerates all 4 paper figures
 
 | Directory | Contents |
 |:--|:--|
-| `causalscale/` | Full source code (11 engines, API, CLI, web) |
+| `causalscale/` | Full source code (12 engines, API, CLI, web) |
 | `causalscale/pretrained/` | Pre-trained models (DepMap, TCGA, Sachs) + benchmark JSONs |
 | `causalscale/core/` | 11 engine implementations (see Engine List below) |
 | `results/` | 17 pre-computed result JSON files (all paper tables/figures) |
@@ -107,7 +107,7 @@ Runs benchmark + scaling + ablation.
 
 All 4 figure PDFs are pre-bundled in `figures/`. To regenerate: `python run_all.py --figures`.
 
-## 11 Engines
+## 12 Engines
 
 ### Core Engines (dimension-based auto-selection)
 
@@ -126,6 +126,7 @@ All 4 figure PDFs are pre-bundled in `figures/`. To regenerate: `python run_all.
 | **llm_prior** | External knowledge | STRING-derived edge prior injection | +12% F1 over vanilla NOTEARS |
 | **bayes_lowrank** | Uncertainty quantification | Bayesian bootstrap + low-rank NOTEARS | ECE 0.003@d=500, 71.4% BRCA STRING |
 | **sc_causal** | Single-cell RNA-seq | NB-LR CI test + PC algorithm | 14.8% PBMC STRING, 35.8% cell-type |
+| **transfer** | Cross-dataset | Warm-start NOTEARS/DAGMA/GOLEM | 45/45 wins, 68.1% edge retention @ d=889 |
 | **multiscale** | d=500-5,000 | Multi-scale low-rank decomposition | 16x KM enrichment over concatenation |
 | **multimodal** | m >= 2 | Cross-modal Frobenius consensus | Multi-omics causal discovery |
 | **ensemble** | Any | 3-engine weighted voting | F1 exceeds best single engine by 22-35% |
