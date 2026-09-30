@@ -1,0 +1,45 @@
+{
+  "rank_sensitivity": [
+    {
+      "r": 8,
+      "time_s": 1.6,
+      "vram_gb": 0.03,
+      "gnn_edges": 1071,
+      "f1_corr": 0.434
+    },
+    {
+      "r": 16,
+      "time_s": 0.2,
+      "vram_gb": 0.04,
+      "gnn_edges": 1447,
+      "f1_corr": 0.557
+    },
+    {
+      "r": 32,
+      "time_s": 0.2,
+      "vram_gb": 0.04,
+      "gnn_edges": 1771,
+      "f1_corr": 0.677
+    },
+    {
+      "r": 64,
+      "time_s": 0.2,
+      "vram_gb": 0.04,
+      "gnn_edges": 2047,
+      "f1_corr": 0.806
+    },
+    {
+      "r": 128,
+      "time_s": 0.2,
+      "vram_gb": 0.04,
+      "gnn_edges": 1991,
+      "f1_corr": 0.92
+    }
+  ],
+  "dagma_d150": {
+    "f1_mean": 0.9894,
+    "f1_std": 0.0069,
+    "time_mean": 68.0,
+    "time_std": 7.6
+  }
+}

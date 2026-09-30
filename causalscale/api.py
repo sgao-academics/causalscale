@@ -1,7 +1,7 @@
-"""causalscale V3.4.0 — Unified Causal Discovery API
-12 engines under one API: DAGMA, ClusterAware, Causal Transformer, LowRankGNN,
-MultiBatch, LLMPrior, BayesLowRank, scCausal, MultiScale, MultiModal, Ensemble,
-Transfer.
+"""causalscale V4.0.0 — Unified Causal Discovery API.
+
+Twelve engines behind one API.  See ``CONVENTIONS.md`` for the one thing a reader
+needs in order to read a returned matrix correctly: the coefficient convention.
 
 Usage:
     import causalscale as cs
@@ -14,6 +14,19 @@ Usage:
     report = model.validate()                        # real data: auto
     report = model.validate(ground_truth=W_true)     # synthetic: causal F1
     report = model.validate(string_data_dir=path)    # biology: STRING/TRRUST
+
+Coefficient convention
+----------------------
+Every engine returns ``W`` with
+
+    X[:, j] ~= sum_i W[j, i] * X[:, i],
+
+so ``W[i, j] != 0`` means the edge runs **j -> i**.  The matrix is the
+transpose of the generator convention used in ``experiments/protocol.py``
+(``S[i, j] != 0`` meaning ``i -> j``).  ``get_edges()``, ``get_network().edges``
+and ``predict()`` all report in the engine's own convention.  This is stated
+here, in ``CONVENTIONS.md``, and asserted in ``tests/test_api_contract.py``
+because a silent transpose is the single easiest way to mis-read this package.
 """
 
 import numpy as np
@@ -24,11 +37,15 @@ from dataclasses import dataclass, field
 
 warnings.filterwarnings("ignore")
 
+# ``W[i, j] != 0`` means the edge runs i -> j for the *documented generator*
+# convention (protocol.py), and j -> i for every engine's returned matrix.
+# The two are transposes of each other; see the module docstring.
 _METHOD_MAP = {
     "lowrank": "lowrank",
     "multi_scale": "multi_scale",
     "cluster_aware": "cluster_aware",
     "gate": "cluster_aware",
+    "notears": "cluster_aware",
     "dagma": "dagma",
     "transformer": "transformer",
     "ct": "transformer",
@@ -44,15 +61,32 @@ _METHOD_MAP = {
     "transfer": "transfer",
 }
 
+#: Which methods return an exact-acyclicity DAG, and which return a rank-r
+#: co-variation network that must not be read as a directed causal graph.
+_OUTPUT_KIND = {
+    "dagma": "dag",
+    "cluster_aware": "dag",
+    "transformer": "dag",
+    "lowrank": "co-variation network (rank-r; not a DAG)",
+    "multi_scale": "co-variation network (rank-r; not a DAG)",
+    "full": "co-variation network (rank-r; not a DAG)",
+}
+
 
 def _auto_method(d: int, n: int) -> str:
-    """Auto-select engine based on dimensionality regime.
+    """Auto-select an engine from the dimensionality regime.
 
-    Engine map (empirically validated):
-        d <= 150:  dagma (strongest low-dimensional F1, Table 1)
-        150 < d <= 200: cluster_aware (DAGMA times out, NOTEARS viable)
-        200 < d <= 500: transformer (Causal Transformer, Gao 2026 ML Springer)
-        d > 500:   lowrank (LowRankGNN, correlation-reconstruction at scale)
+    This is a convenience, not a claim: it routes on ``d`` alone, and in the
+    low-dimensional regime it routes to DAGMA rather than to any engine of this
+    package.  The choice is recorded in ``network.metadata["auto_routed_to"]``
+    so that a reported number can always be traced to the engine that produced
+    it.  Section 4.4 of the accompanying paper measures what this routing does
+    and is why it is documented rather than advertised.
+
+        d <= 150        -> dagma          (official DAGMA release)
+        150 < d <= 200  -> cluster_aware  (verified NOTEARS, exact constraint)
+        200 < d <= 500  -> transformer    (attention over variable tokens)
+        d > 500         -> lowrank        (rank-r co-variation network)
     """
     if d <= 150:
         return "dagma"
@@ -62,6 +96,18 @@ def _auto_method(d: int, n: int) -> str:
         return "transformer"
     else:
         return "lowrank"
+
+
+def _mask_diagonal(W):
+    """Zero the diagonal in place and return the matrix.
+
+    The solvers do not constrain ``W[i, i]``, and a fitted self-coefficient of
+    up to 0.8 survives into the returned adjacency.  A self-loop is not an edge,
+    so it is removed at the boundary rather than left for a reader to notice.
+    """
+    W = np.asarray(W)
+    np.fill_diagonal(W, 0.0)
+    return W
 
 
 @dataclass
@@ -78,7 +124,7 @@ class CausalNetwork:
 
 
 class CausalDiscovery:
-    """One-line causal discovery engine (V3.3.0).
+    """One-line causal discovery engine (V4.0.0).
 
     Backed by CausalDiscoveryEngine V2 with:
     - Adaptive rank selection (spectral + AIC/BIC + pruning)
@@ -142,10 +188,19 @@ class CausalDiscovery:
         if self.n < 10:
             raise ValueError(f"Need >= 10 samples, got {self.n}")
 
-        # Auto method
+        # Auto method.  The routing decision is kept, not discarded: a number
+        # reported at d <= 150 came from DAGMA, and saying so is the difference
+        # between a reproducible result and a misattributed one.
+        self.requested_method = method
+        self.auto_routed_to = None
         if method == "auto":
-            method = _auto_method(self.d, self.n)
-        self.method = _METHOD_MAP.get(method, method)
+            self.auto_routed_to = _auto_method(self.d, self.n)
+            method = self.auto_routed_to
+        if method not in _METHOD_MAP:
+            raise ValueError(
+                f"Unknown method {method!r}. Available: "
+                + ", ".join(sorted(k for k in _METHOD_MAP if k != "auto")))
+        self.method = _METHOD_MAP[method]
 
         # Stability selection: multi-seed consensus
         self.n_seeds = kwargs.pop("n_seeds", 1)
@@ -321,10 +376,19 @@ class CausalDiscovery:
         """Single-seed fit (original behavior)."""
         self._result = self._engine.fit(self.X)
 
+        # A self-loop is not an edge.  The solvers leave W[i, i] unconstrained
+        # and the fitted value reaches ~0.8, so it is removed here, before it is
+        # either counted or returned.
+        adj = _mask_diagonal(np.array(self._result.adjacency, dtype=float))
+        edges = self._extract_edges(adj)
+        # Count what is reported, not what the solver happened to leave behind:
+        # the solver's own count includes the diagonal.
+        edge_count = int(np.sum(np.abs(adj) > 0.3))
+
         net = CausalNetwork(
-            adjacency=self._result.adjacency,
-            edges=self._extract_edges(self._result.adjacency),
-            edge_count=self._result.edge_count,
+            adjacency=adj,
+            edges=edges,
+            edge_count=edge_count,
             is_dag=bool(self._result.h_history[-1] < 0.01) if self._result.h_history else False,
             n_vars=self.d,
             var_names=self.var_names,
@@ -336,6 +400,8 @@ class CausalDiscovery:
                 "rank": self._result.final_rank,
                 "convergence": self._result.convergence,
                 "significance": self._result.significance,
+                "output_kind": self.output_kind,
+                "auto_routed_to": self.auto_routed_to,
             },
         )
         self._network = net
@@ -807,17 +873,33 @@ class CausalDiscovery:
         return self
 
     def _extract_edges(self, W, threshold=0.3):
+        """Edges as ``(cause, effect, weight)``, in the engine's convention.
+
+        ``W[i, j]`` is the coefficient of variable ``j`` in the equation for
+        variable ``i``, so a non-zero entry means the edge runs ``j -> i``.
+        Reading it the other way round is the mistake this method exists to
+        avoid, so the orientation is applied here, once, rather than left to
+        each caller: an earlier release returned ``(i, j)`` for ``W[i, j]``,
+        which reported every edge backwards.
+        """
         edges = []
         for i in range(self.d):
             for j in range(self.d):
                 if i != j and abs(W[i, j]) > threshold:
-                    edges.append((self.var_names[i], self.var_names[j], float(W[i, j])))
+                    # W[i, j] -> i is the child, j is the parent.
+                    edges.append((self.var_names[j], self.var_names[i],
+                                  float(W[i, j])))
         edges.sort(key=lambda x: -abs(x[2]))
         return edges
 
     def get_network(self, top_k=None) -> CausalNetwork:
         if not self._fitted:
             raise RuntimeError("Not fitted. Call .fit() first.")
+        if self._network is not None:
+            # Every construction path states what it produced, so a caller never
+            # has to infer DAG-vs-co-variation from the method name.
+            self._network.metadata.setdefault("output_kind", self.output_kind)
+            self._network.metadata.setdefault("auto_routed_to", self.auto_routed_to)
         if top_k and self._network:
             self._network.edges = self._network.edges[:top_k]
         return self._network
@@ -827,15 +909,44 @@ class CausalDiscovery:
             raise RuntimeError("Not fitted.")
         return self._network.adjacency
 
+    @property
+    def W(self) -> np.ndarray:
+        """The fitted coefficient matrix, ``W[i, j]`` = coefficient of ``x_j`` in ``x_i``.
+
+        Alias of ``get_adjacency()``; the name used throughout the documentation
+        and in every reproduction script.
+        """
+        return self.get_adjacency()
+
+    @property
+    def output_kind(self) -> str:
+        """What the returned matrix is: ``'dag'`` or ``'co-variation network'``.
+
+        Only the exact-acyclicity engines return a DAG.  The rank-r engines
+        (`lowrank`, `multi_scale`) return a co-variation network whose
+        direction is not identified; calling that a causal graph is the
+        substantive error the accompanying paper reports against this package,
+        so the API states which one it produced.
+        """
+        return _OUTPUT_KIND.get(self.method, "dag")
+
     def get_edges(self, confidence=0.0, names=None):
         if self._engine is None:
             raise RuntimeError("Not fitted.")
         return self._engine.get_edges(confidence=confidence, names=names or self.var_names)
 
     def predict(self, X_new):
+        """Reconstruct ``X_new`` from the fitted model.
+
+        The model is ``X[:, j] = sum_i W[:, j, i] * X[:, i]`` i.e.
+        ``X ~= X @ W.T``, so reconstruction must contract ``W`` on its second
+        index.  (An earlier release returned ``X_new @ W``, which propagates the
+        graph the wrong way and is only visible as a wrong number, never as an
+        exception.)
+        """
         if not self._fitted:
             raise RuntimeError("Not fitted.")
-        return X_new @ self._network.adjacency
+        return X_new @ self._network.adjacency.T
 
     def counterfactual(self, X, intervention, effect_vars=None):
         if not self._fitted:

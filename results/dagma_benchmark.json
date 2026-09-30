@@ -1,0 +1,26 @@
+{
+  "d30": {
+    "F1_mean": 0.5893,
+    "F1_std": 0.0382,
+    "edges_mean": 58,
+    "time_mean_s": 3.8
+  },
+  "d50": {
+    "F1_mean": 0.6893,
+    "F1_std": 0.0555,
+    "edges_mean": 80,
+    "time_mean_s": 10.1
+  },
+  "d80": {
+    "F1_mean": 0.8962,
+    "F1_std": 0.051,
+    "edges_mean": 91,
+    "time_mean_s": 90.0
+  },
+  "d100": {
+    "F1_mean": 0.9307,
+    "F1_std": 0.0166,
+    "edges_mean": 108,
+    "time_mean_s": 26.1
+  }
+}

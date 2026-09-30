@@ -1,5 +1,5 @@
 # Pan-cancer ARID1A-MTOR scan via causalscale cluster_aware
-# Output: ./results/pan_cancer_ckpt.json
+# Output: written under OUTPUT_DIR
 import os, sys, json, time, warnings
 import numpy as np
 import pandas as pd
@@ -9,8 +9,8 @@ warnings.filterwarnings("ignore")
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import causalscale as cs
 
-TCGA_DIR = os.environ.get("TCGA_DATA_DIR", os.path.join(os.path.dirname(os.path.abspath(__file__)), "data"))
-OUTPUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "results")
+TCGA_DIR = os.environ.get("CAUSALSCALE_TCGA_DIR", os.path.join("data", "tcga"))
+OUTPUT_DIR = os.environ.get("CAUSALSCALE_OUTPUT_DIR", "results")
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 CKPT_PATH = os.path.join(OUTPUT_DIR, "pan_cancer_ckpt.json")
 

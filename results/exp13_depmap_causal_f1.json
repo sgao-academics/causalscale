@@ -1,0 +1,24 @@
+{
+  "engine": "CausalLowRankGNN (auto-regressive + L1 + DAG)",
+  "data": "DepMap 24Q2 CRISPR CERES",
+  "shape": [
+    1208,
+    17787
+  ],
+  "rank": 64,
+  "epochs": 800,
+  "lambda1": 0.005,
+  "dag_weight": 0.5,
+  "train_time_min": 0.9,
+  "total_edges_found": 0,
+  "best_threshold": 0.01,
+  "best_f1": 0,
+  "best_precision": 0.0,
+  "best_recall": 0.0,
+  "best_tp": 0,
+  "top28_f1": 0,
+  "top28_tp": 0,
+  "gold_standard_size": 8146,
+  "validated_edges": [],
+  "all_top_edges": []
+}

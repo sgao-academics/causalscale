@@ -1,4 +1,14 @@
-"""causalscale V3.4: Unified Causal Discovery Platform — 12 engines under one API.
+"""causalscale V4.0: Unified Causal Discovery Platform — 12 engines under one API.
+
+Released with the replication package for "Protocol, Not Physics: Re-measuring
+the Scalability Limit of Differentiable Causal Discovery" (KDD 2027 Datasets &
+Benchmarks).  In that paper this package is the *object measured* in Section 4.4,
+not the contribution; read ``docs/ENGINES_LEGACY.md`` for the engine-by-engine
+descriptions and treat their self-reported numbers as unreplicated.
+
+Coefficient convention: ``W[i, j] != 0`` means the edge runs ``j -> i``.  See
+``CONVENTIONS.md``.
+
 
 Core API:
     import causalscale as cs
@@ -40,10 +50,15 @@ from .core.multimodal import MultiModalNOTEARS
 from .core.transfer_engine import fit_transfer, TransferResult
 from .pretrained import validate_against_string
 
-__version__ = "3.4.0"
+__version__ = "4.0.0"
 __author__ = "Shuaidong Gao (ORCID: 0009-0004-5641-3581)"
+#: Coefficient convention of every returned matrix.  ``"W[i,j] != 0`` means
+#: j -> i"; the generator convention is its transpose.  Machine-readable so a
+#: caller can assert on it instead of remembering it.
+CONVENTION = "W[i,j] != 0 means j -> i"
 
 __all__ = [
+    "CONVENTION",
     "CausalDiscovery", "CausalNetwork",
     "CausalDiscoveryEngine", "CausalTransformer", "MultiModalNOTEARS",
     "LowRankGNN", "train_lowrank_gnn",

@@ -1,0 +1,30 @@
+{
+  "d30": {
+    "true_edges": 46,
+    "cs_single": 0.5859,
+    "cs_stability5": 0.5479,
+    "cs_ensemble": 0.5,
+    "notears": 0.5814
+  },
+  "d50": {
+    "true_edges": 119,
+    "cs_single": 0.5308,
+    "cs_stability5": 0.3704,
+    "cs_ensemble": 0.3333,
+    "notears": 0.4749
+  },
+  "d80": {
+    "true_edges": 301,
+    "cs_single": 0.4953,
+    "cs_stability5": 0.4724,
+    "cs_ensemble": 0.4953,
+    "notears": 0.3912
+  },
+  "d100": {
+    "true_edges": 484,
+    "cs_single": 0.45,
+    "cs_stability5": 0.4618,
+    "cs_ensemble": 0.45,
+    "notears": 0.185
+  }
+}

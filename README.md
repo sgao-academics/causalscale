@@ -4,180 +4,201 @@ license: mit
 library_name: causalscale
 tags:
 - causal-discovery
-- genomics
-- dag
-- low-rank
-- structure-learning
 - benchmark
+- reproducibility
+- structure-learning
+- dag
 - pytorch
-- python
-- pretrained
-- multi-engine
 ---
 
-# causalscale v3.4.0 Replication Package
+# causalscale 4.0.0 — replication package
 
-**12 engines. d=30 to 17,787. 3 modalities. 33 cancers. 92% test coverage.**
+For the KDD 2027 Datasets & Benchmarks submission
 
-> This replication package accompanies the KDD 2027 Datasets & Benchmarks submission.
-> It contains all source code, pre-computed results, figures, and one-click reproduction.
+> **Protocol, Not Physics: Re-measuring the Scalability Limit of Differentiable
+> Causal Discovery**
 
-## Quick Start (3 commands)
+Author: Shuaidong Gao (ORCID [0009-0004-5641-3581](https://orcid.org/0009-0004-5641-3581))
+
+This is the **revision**. It replaces the earlier release, in which the paper was
+organised around a twelve-engine toolkit. That framing is gone: the paper now asks
+a single question — *is the widely reported `d ≈ 150` scalability limit a property
+of the methods or of the protocol used to measure them?* — and the toolkit is one
+of the objects being measured, not the contribution.
+
+The version number is 4.0 rather than 3.5 because the defects fixed here are the
+kind that made the previous release untrustworthy, not additions to it. They are
+listed under **What changed in 4.0** below, each with the check that now pins it.
+
+---
+
+## Quick start
+
+The three checks below need **numpy and matplotlib only**. They do not import
+PyTorch, do not import this package's engines, and do not touch a GPU. They read
+the released per-seed records and rebuild everything the paper reports.
 
 ```bash
-pip install -e . dagma statsmodels
-python run_all.py --verify      # ~30 sec: validates installation + result integrity
-python run_all.py --figures     # ~10 sec: regenerates all 4 paper figures
+pip install numpy matplotlib
+
+python run_all.py --verify      # package integrity + execute the paper's claims
+python run_all.py --tables      # every table, rebuilt from the records
+python run_all.py --figures     # all three printed figures, from the records
+python run_all.py --audit       # only the claim-by-claim assertions
 ```
 
-## What's Included
+`--verify` is designed so that it cannot fail for an environmental reason: if the
+records are present, it reports on the science; optional dependencies are listed
+but never required. `VERIFY.md` gives the exact expected output, so a reader can
+tell a real pass from a silent one.
 
-| Directory | Contents |
+Re-running the experiments is a separate, expensive path:
+
+```bash
+pip install -e ".[solvers]"              # torch, dagma, scipy, scikit-learn
+python run_all.py --list                 # list the six suites
+python run_all.py --suite boundary       # one suite, resumable
+python run_all.py --reproduce            # all suites (hours; GPU recommended)
+```
+
+---
+
+## What changed in 4.0
+
+Five defects, each of which could produce a wrong answer that looked like a
+plausible one. All five were found by reading the implementation against its own
+objective, and each is now covered by an assertion.
+
+| # | Defect in the earlier release | Fixed by | Pinned by |
+|:--|:--|:--|:--|
+| 1 | `get_network().edges` named `W[i, j]` as the edge `i -> j`, while the solver minimises `X - X @ W.T` — so `W[i, j]` is the edge `j -> i` and **every reported edge was reversed** | `api.CausalDiscovery._extract_edges` reports the parent first | `tests/test_api_contract.py::test_extract_edges_orientation` |
+| 2 | `predict()` returned `X @ W`, propagating the graph the wrong way | `predict()` returns `X @ W.T` | `tests/...::test_predict_contract` |
+| 3 | The returned adjacency carried a self-coefficient of up to 0.8 on the diagonal, and the reported edge count included it | the diagonal is zeroed at the boundary and the count is taken over off-diagonal entries | `tests/...::test_fitted_output_is_clean` |
+| 4 | `method="notears"` — offered in the web UI — raised `ValueError` | registered as an alias; an unknown method now lists what is available | `tests/...::test_method_aliases` |
+| 5 | `method="auto"` silently routed to DAGMA at `d <= 150`, so "causalscale" numbers at low dimension were DAGMA numbers | the routing decision is kept in `metadata["auto_routed_to"]` and documented | `tests/...::test_auto_routing_is_recorded` |
+
+Two further changes are about honesty rather than arithmetic, and they are the
+reason the package now states what it is producing:
+
+* **A rank-`r` output is not called a DAG.** `output_kind` returns
+  `"co-variation network (rank-r; not a DAG)"` for `lowrank`, `multi_scale` and
+  `full`. Those engines optimise a correlation-reconstruction objective, not
+  `h(W) = 0`; reading their output as a directed causal graph is the substantive
+  error the paper reports against this package in §4.4.
+* **The claims of the earlier README are gone.** Every number that release
+  advertised and this one cannot reproduce has been removed rather than
+  reworded. `docs/ENGINES_LEGACY.md` keeps the old engine descriptions, marked
+  **unreplicated**.
+
+Two conventions are now written down instead of assumed — the coefficient
+orientation above, and what each output is. `CONVENTIONS.md` is one page and is
+the thing to read before reading any matrix this package returns.
+
+---
+
+## API surface, read rather than asserted
+
+An earlier description of this package named five entry points. Two of those
+names exist; three do not, and the real names are different. They are listed here
+rather than described, so the mismatch cannot recur silently:
+
+| Named in the earlier description | Actual entry point |
 |:--|:--|
-| `causalscale/` | Full source code (12 engines, API, CLI, web) |
-| `causalscale/pretrained/` | Pre-trained models (DepMap, TCGA, Sachs) + benchmark JSONs |
-| `causalscale/core/` | 11 engine implementations (see Engine List below) |
-| `results/` | 17 pre-computed result JSON files (all paper tables/figures) |
-| `figures/` | 4 paper figures (PDF + PNG for fig3) |
-| `scripts/gen_figures/` | 4 figure generation scripts |
-| `scripts/` | 6 experiment scripts (benchmark, ablation, scaling, etc.) |
-| `examples/` | 4 Jupyter notebooks (biology, finance, neuroscience, drug discovery) |
-| `tests/` | 3 test files (92% coverage) |
-| `run_all.py` | One-click reproduction script |
-| `download_data.py` | External data download helper |
-| `pan_cancer_scan.py` | 33-cancer TCGA scan script (Table 4) |
+| `causalscale.list_models()` | `causalscale.pretrained.list_models()` |
+| `causalscale.two_stage_discovery()` | `causalscale.core.two_stage.two_stage_discovery()` |
+| `ascend_discover()` | `causalscale.core.ascend.two_tier_discovery()` |
+| `stability_select()` | `causalscale.core.uncertainty.StabilitySelector` |
+| `run_pcmci()` | `causalscale.core.pcmci_engine.PCMCIEngine` |
 
-## Reproduction Guide
+---
 
-### Verify Installation (30 seconds)
-```bash
-python run_all.py --verify
-```
-Checks: import causalscale, quick d=30 test, result file integrity, figure file integrity, pre-trained models.
+## Paper → package cross-reference
 
-### Regenerate All Figures (10 seconds)
-```bash
-python run_all.py --figures
-```
-Runs all 4 `scripts/gen_figures/gen_fig*.py` scripts. Reads from `results/` directory.
+Every number in the paper is rebuilt from `experiments/records/*.jsonl`. The
+records are one JSON object per `(method, dimension, seed, condition)`; nothing is
+aggregated before it is written.
 
-### Print All Table Data (instant)
-```bash
-python run_all.py --tables
-```
-Prints cached results for Tables 1, 4, 5, 6 from `results/*.json`.
+Tables are identified by their LaTeX label first, because the printed number
+depends on how the paper is assembled: the protocol card is `tab:card`, so
+`tab:main` prints as Table 2, not Table 1.
 
-### Run Synthetic Benchmark (~15 min on GPU)
-```bash
-python run_all.py --benchmark
-```
-Reproduces Table 1 (NOTEARS vs DAGMA vs causalscale, d=30-150, 5 seeds each).
+| LaTeX label | Printed as | What it shows | Rebuilt by | Records |
+|:--|:--|:--|:--|:--|
+| `tab:main` | Table 2 | structure F1 vs dimension, four configurations, one protocol | `records_to_tables.table_main` | `boundary_er.jsonl` |
+| `tab:factorial` | Table 3 | the 2×2×2 schedule factorial, as main effects | `records_to_tables.table_factorial` | `attribution_factorial.jsonl` |
+| `tab:penalty` | Table 4 | the penalty sweep: F1 and edge count vs `lambda_1` | `records_to_tables.table_penalty` | `penalty_sweep.jsonl` |
+| `fig:main` a/b/c | Figure 1 | the boundary, the penalty curve, score vs `h(W)` | `records_to_figures` | `boundary_er.jsonl`, `penalty_sweep.jsonl`, `attribution_factorial.jsonl` |
+| `fig:robustness` a/b | Figure 2 | mechanism families; gap vs confounder strength | `records_to_figures` | `mechanism.jsonl`, `confounder.jsonl` |
+| `fig:cohort` | Figure 3 | the ARID1A–MTOR sign across 33 cohorts | `records_to_figures` | `results/pan_cancer_ckpt.json` |
+| §3 | — | the protocol itself | `experiments/protocol.py` | — |
+| §5 | — | identifiability boundary and matched null | see `PROTOCOL.md §5` | `results/exp15_string_mapped_f1.json` |
 
-### Run Scaling Experiments (~30 min on GPU)
-```bash
-python run_all.py --scaling
-```
-Reproduces Table 5 (LowRankGNN rank sensitivity, r=8-128).
-
-### Full Reproduction (~1 hour on GPU)
-```bash
-python run_all.py
-```
-Runs benchmark + scaling + ablation.
-
-## Paper-to-Package Cross-Reference
-
-### Tables
-| Paper Table | Data Source | Reproduce With |
-|:--|:--|:--|
-| Table 1: Synthetic DAG F1 | `results/exp1_causalscale_er.json` + `results/dagma_benchmark.json` | `python run_all.py --benchmark` |
-| Table 2: Paired t-test | Computed from Table 1 data | Derivable from `results/exp1_causalscale_er.json` |
-| Table 3: Feature comparison | Static (no computation) | In paper TeX |
-| Table 4: ARID1A-MTOR | `results/pan_cancer_ckpt.json` | `python pan_cancer_scan.py` (needs TCGA data) |
-| Table 5: LowRank scaling | `results/exp9_lowrank_scaling.json` | `python run_all.py --scaling` |
-| Table 6: Memory scaling | `results/memory_scaling.json` | Pre-computed |
-
-### Figures
-| Paper Figure | Script | Output |
-|:--|:--|:--|
-| Fig 1: Architecture | `scripts/gen_figures/gen_fig1_architecture.py` | `figures/fig1_architecture.pdf` |
-| Fig 2: Benchmark | `scripts/gen_figures/gen_fig2_benchmark.py` | `figures/fig2_benchmark.pdf` |
-| Fig 3: ARID1A-MTOR | `scripts/gen_figures/gen_fig3_arid1a_mtor.py` | `figures/fig3_arid1a_mtor.pdf` |
-| Fig 4: Timing/Scaling | `scripts/gen_figures/gen_fig4_timing.py` | `figures/fig4_timing.pdf` |
-
-All 4 figure PDFs are pre-bundled in `figures/`. To regenerate: `python run_all.py --figures`.
-
-## 12 Engines
-
-### Core Engines (dimension-based auto-selection)
-
-| Engine | Best For | Method | Key Result |
-|:--|:--|:--|:--|
-| **dagma** | d <= 150 | DAGMA (Bello et al., NeurIPS 2022) | F1=0.989 @ d=150 |
-| **cluster_aware** | d <= 200 | Verified NOTEARS with exact DAG constraint | Exceeds NOTEARS at all d, exceeds DAGMA at d=30 |
-| **transformer** | d=200-500 | Causal Transformer (Gao 2026) | 1,028 edges @ d=200, NOTEARS = 0 |
-| **lowrank** | d > 500 | LowRankGNN (Gao 2026) | d=17,787, 88.7% STRING/TRRUST precision |
-
-### Specialized Engines
-
-| Engine | Best For | Method | Key Result |
-|:--|:--|:--|:--|
-| **multibatch** | Multi-dataset | Dataset-specific residual adapters | 0.92 shared-edge precision, 93.3% ASCEND |
-| **llm_prior** | External knowledge | STRING-derived edge prior injection | +12% F1 over vanilla NOTEARS |
-| **bayes_lowrank** | Uncertainty quantification | Bayesian bootstrap + low-rank NOTEARS | ECE 0.003@d=500, 71.4% BRCA STRING |
-| **sc_causal** | Single-cell RNA-seq | NB-LR CI test + PC algorithm | 14.8% PBMC STRING, 35.8% cell-type |
-| **transfer** | Cross-dataset | Warm-start NOTEARS/DAGMA/GOLEM | 45/45 wins, 68.1% edge retention @ d=889 |
-| **multiscale** | d=500-5,000 | Multi-scale low-rank decomposition | 16x KM enrichment over concatenation |
-| **multimodal** | m >= 2 | Cross-modal Frobenius consensus | Multi-omics causal discovery |
-| **ensemble** | Any | 3-engine weighted voting | F1 exceeds best single engine by 22-35% |
-
-Plus: **PCMCI** time-series engine (Runge et al., Sci. Adv. 2019).
-
-## External Data (Optional)
-
-The pre-computed results in `results/` do NOT require any external data downloads.
-To reproduce experiments that use external biological data:
+The claims themselves are executable:
 
 ```bash
-python download_data.py --string    # STRING PPI + TRRUST (for validate_against_string)
-python download_data.py --tcga       # TCGA gene expression (for pan_cancer_scan.py)
-python download_data.py --depmap     # DepMap CRISPR (for genome-scale)
+python run_all.py --audit
 ```
 
-Data sources:
-- TCGA: UCSC Xena (https://xenabrowser.net/)
-- DepMap: Broad Institute (https://depmap.org/, 24Q2 release)
-- STRING PPI v12.0: https://string-db.org/
-- TRRUST v2: https://www.grnpedia.org/trrust/
+This does not merely re-derive the numbers; it states them as predicates over the
+records and fails if a sentence the paper relies on stops holding. A
+reproduction script shows that the numbers can be regenerated. An audit shows
+what would be false if they were not.
 
-## Install
+---
 
-```bash
-pip install causalscale
-```
+## Layout
 
-GPU auto-detected; CPU fallback supported. Python >=3.10, PyTorch >=2.1.
+| Path | Contents |
+|:--|:--|
+| `experiments/protocol.py` | The measurement: generators, scoring, solvers, tuning budget. The single source of truth. |
+| `experiments/run_sweep.py` | The six suites, each a list of cells. Resumable, one row per cell. |
+| `experiments/records/` | Released per-seed records, one JSON row per cell. |
+| `experiments/records_to_tables.py` | Records → LaTeX and console tables. |
+| `experiments/records_to_figures.py` | Records → the three printed figures. |
+| `experiments/audit_paper_numbers.py` | The paper's claims, as assertions. |
+| `tests/` | `test_protocol.py` (the measurement) and `test_api_contract.py` (the toolkit's promises). |
+| `causalscale/` | The toolkit measured in §4.4, kept for inspection. |
+| `results/` | Result files from the earlier submission. |
+| `figures/` | The three printed figures. `figures/legacy/` holds the superseded set. |
+| `legacy/gen_figures/` | The generators for the superseded figures. Not a live path. |
+| `docs/ENGINES_LEGACY.md` | Engine documentation carried over, marked unreplicated. |
+| `CONVENTIONS.md` | Coefficient orientation, scoring, and what each output is. |
+| `VERIFY.md` | The expected output of `run_all.py --verify`. |
 
-```bash
-# Full reproduction
-git clone https://github.com/sgao-academics/causalscale
-cd causalscale
-pip install -e .
-python run_all.py --verify
-```
+---
+
+## What is and is not claimed
+
+* **Claimed.** Under one fixed protocol, a plain NOTEARS solver does not return an
+  empty graph at `d = 150`; the collapse that is normally reported is dominated by
+  the sparsity penalty, a scalar that was never swept, and not by the two causes
+  usually blamed (an exhausted iteration budget, an unsatisfied constraint).
+* **Not claimed.** That NOTEARS scales to genome-wide resolution, or that this
+  package establishes a new state of the art. The obstruction past `d ≈ 500` is
+  stated as identifiability, not compute.
+* **Not re-measured.** The other engines in `docs/ENGINES_LEGACY.md` are carried
+  over with their original, self-reported numbers. They were not independently
+  re-run and should not be read as evidence.
+
+All experiments were run by one author on a single 8 GB GPU. Timings and
+out-of-memory thresholds are hardware-specific; the F1 comparisons are not, and
+every record states the seed that produced it.
+
+---
 
 ## Citation
 
-```
+```bibtex
 @inproceedings{gao2027causalscale,
-  title={causalscale: Scaling Differentiable Causal Discovery to Genome-Wide Resolution},
+  title={Protocol, Not Physics: Re-measuring the Scalability Limit of
+         Differentiable Causal Discovery},
   author={Gao, Shuaidong},
-  booktitle={Proceedings of the 33rd ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD)},
-  year={2027},
-  note={Datasets \& Benchmarks Track}
+  booktitle={Proceedings of the 33rd ACM SIGKDD Conference on Knowledge
+             Discovery and Data Mining (KDD), Datasets and Benchmarks Track},
+  year={2027}
 }
 ```
 
 ## License
 
-MIT. Author: Shuaidong Gao (ORCID: 0009-0004-5641-3581).
+MIT. See `LICENSE`.

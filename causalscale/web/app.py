@@ -43,7 +43,13 @@ with tab1:
             type=["csv", "tsv", "txt"],
         )
     with col2:
-        method = st.selectbox("Method", ["lowrank", "notears", "cluster_aware"])
+        # The list is taken from the API's own registry rather than typed out
+        # again here; the previous hard-coded list offered "notears", which the
+        # registry did not know and which therefore raised on every run.
+        from causalscale.api import _METHOD_MAP
+        method = st.selectbox(
+            "Method",
+            [m for m in _METHOD_MAP if m not in ("auto", "ct", "gate", "mm")])
         rank = st.slider("Rank", 4, 256, 64, step=4)
         epochs = st.slider("Epochs", 50, 500, 200, step=50)
 

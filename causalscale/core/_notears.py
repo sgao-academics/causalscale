@@ -1,14 +1,41 @@
-"""Verified NOTEARS + CAGate backend - mirrors _ksweep_worker_v2"""
+"""Verified NOTEARS + CAGate backend - mirrors _ksweep_worker_v2
+
+Two things a reader has to know before using the returned matrix, both of which
+are stated here because getting either wrong produces a plausible-looking number
+rather than an error:
+
+* **Convention.** The residual is ``X - X @ W.T``, i.e. the model is
+  ``X[:, i] ~= sum_j W[i, j] * X[:, j]``.  A non-zero ``W[i, j]`` therefore means
+  the edge runs ``j -> i``: entry ``[i, j]`` is named by the *child* first.  The
+  generator in ``experiments/protocol.py`` uses the opposite layout
+  (``S[i, j] != 0`` means ``i -> j``), so ``W`` is the transpose of ``S``.
+* **Objective.** This solver optimises the augmented Lagrangian of the
+  acyclicity constraint alone.  It has **no L1 term**, so it has no sparsity
+  control and returns a dense graph; ``experiments/protocol.py`` is where the
+  penalised objective of Eq. (1) lives.  Section 4.4 of the accompanying paper
+  measures this solver as shipped, without the penalty, and that is why the
+  distinction is written down rather than assumed.
+"""
 import torch, numpy as np, time
 from sklearn.cluster import KMeans
 
+
+def _no_self_loops(W):
+    """Zero the diagonal: W[i, i] is a self-coefficient, not an edge."""
+    np.fill_diagonal(W, 0.0)
+    return W
+
+
 def run_notears(X, device='cuda', lr=0.002, outer=40, inner=250, seed=42):
     """Standard NOTEARS with augmented Lagrangian.
-    
+
     Args:
         X: (n, d) numpy array or torch tensor
     Returns:
-        W: (d, d) adjacency matrix, edge_count, h_final, time_s
+        W: (d, d) adjacency matrix, diagonal zeroed, ``W[i, j]`` = j -> i
+        edge_count: number of off-diagonal entries with ``|W| > 0.3``
+        h_final: final value of the acyclicity term
+        time_s: wall clock
     """
     if isinstance(X, np.ndarray):
         X = torch.tensor(X.astype(np.float32))
@@ -49,9 +76,11 @@ def run_notears(X, device='cuda', lr=0.002, outer=40, inner=250, seed=42):
         if h_curr < 1e-8:
             break
     
-    W_np = W.detach().cpu().numpy()
+    W_np = _no_self_loops(W.detach().cpu().numpy())
+    # Count off-diagonal entries only: the solver leaves a self-coefficient on
+    # the diagonal, and counting it inflated the reported edge total.
     edge_count = int(np.sum(np.abs(W_np) > 0.3))
-    
+
     return W_np, edge_count, h_curr, time.time() - t0
 
 
