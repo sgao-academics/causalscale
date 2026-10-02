@@ -158,7 +158,7 @@ what would be false if they were not.
 | `experiments/audit_paper_numbers.py` | The paper's claims, as assertions. |
 | `tests/` | `test_protocol.py` (the measurement) and `test_api_contract.py` (the toolkit's promises). |
 | `causalscale/` | The toolkit measured in §4.4, kept for inspection. |
-| `results/` | Result files from the earlier submission. |
+| `results/` | Result files from the earlier submission, plus the four added with the revision: `exp8_notears_vs_cs.json` and its recomputed `exp8_paired_summary.json` (the earlier submission's own paired run, six dimensions x five paired seeds), `bio_baseline.json` (the genome-scale matched null and same-edge-count correlation baseline), and `paired_stats_single_protocol.json` (the 10-seed single-protocol paired statistics behind the revised Table 2). |
 | `figures/` | The three printed figures. `figures/legacy/` holds the superseded set. |
 | `legacy/gen_figures/` | The generators for the superseded figures. Not a live path. |
 | `docs/ENGINES_LEGACY.md` | Engine documentation carried over, marked unreplicated. |

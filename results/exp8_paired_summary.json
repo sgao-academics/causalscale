@@ -1,0 +1,125 @@
+{
+ "description": "Recomputed from exp8_notears_vs_cs.json (the earlier submission's own paired run: causalscale and default NOTEARS on the same seeds and the same data, six dimensions x five paired seeds). This summary is the rebuttal's section 0 table. Definitions: p_t is the two-sided paired t-test; d_paired is mean(delta)/sd(delta) with delta = causalscale - NOTEARS; wilcox2 is the two-sided Wilcoxon signed-rank test; sign is the two-sided exact sign test. An earlier internal summary of the same run (exp10_statistical_tests.json) used a one-sided Wilcoxon and a pooled-SD effect size; it is not the table reported here.",
+ "cells": {
+  "30": {
+   "n": 5,
+   "causalscale_mean": 0.6006,
+   "causalscale_sd": 0.143,
+   "notears_mean": 0.4197,
+   "notears_sd": 0.041,
+   "delta_mean": 0.1809,
+   "delta_sd": 0.1129,
+   "p_paired_t_two_sided": 0.0231,
+   "cohens_d_paired": 1.6,
+   "p_wilcoxon_two_sided": 0.0625,
+   "p_sign_two_sided": 0.0625,
+   "per_seed_delta": [
+    0.0404,
+    0.1307,
+    0.3323,
+    0.1505,
+    0.2507
+   ]
+  },
+  "50": {
+   "n": 5,
+   "causalscale_mean": 0.5946,
+   "causalscale_sd": 0.1442,
+   "notears_mean": 0.4438,
+   "notears_sd": 0.0531,
+   "delta_mean": 0.1508,
+   "delta_sd": 0.1115,
+   "p_paired_t_two_sided": 0.039,
+   "cohens_d_paired": 1.35,
+   "p_wilcoxon_two_sided": 0.125,
+   "p_sign_two_sided": 0.375,
+   "per_seed_delta": [
+    -0.0219,
+    0.1897,
+    0.1044,
+    0.2383,
+    0.2434
+   ]
+  },
+  "80": {
+   "n": 5,
+   "causalscale_mean": 0.7306,
+   "causalscale_sd": 0.089,
+   "notears_mean": 0.563,
+   "notears_sd": 0.0481,
+   "delta_mean": 0.1676,
+   "delta_sd": 0.0669,
+   "p_paired_t_two_sided": 0.00499,
+   "cohens_d_paired": 2.5,
+   "p_wilcoxon_two_sided": 0.0625,
+   "p_sign_two_sided": 0.0625,
+   "per_seed_delta": [
+    0.0523,
+    0.1958,
+    0.212,
+    0.2108,
+    0.1673
+   ]
+  },
+  "100": {
+   "n": 5,
+   "causalscale_mean": 0.7664,
+   "causalscale_sd": 0.0328,
+   "notears_mean": 0.5992,
+   "notears_sd": 0.0154,
+   "delta_mean": 0.1672,
+   "delta_sd": 0.037,
+   "p_paired_t_two_sided": 0.000538,
+   "cohens_d_paired": 4.52,
+   "p_wilcoxon_two_sided": 0.0625,
+   "p_sign_two_sided": 0.0625,
+   "per_seed_delta": [
+    0.1567,
+    0.1848,
+    0.2178,
+    0.1585,
+    0.1181
+   ]
+  },
+  "150": {
+   "n": 5,
+   "causalscale_mean": 0.7677,
+   "causalscale_sd": 0.025,
+   "notears_mean": 0.6499,
+   "notears_sd": 0.0191,
+   "delta_mean": 0.1178,
+   "delta_sd": 0.0286,
+   "p_paired_t_two_sided": 0.000768,
+   "cohens_d_paired": 4.12,
+   "p_wilcoxon_two_sided": 0.0625,
+   "p_sign_two_sided": 0.0625,
+   "per_seed_delta": [
+    0.111,
+    0.165,
+    0.0872,
+    0.1124,
+    0.1132
+   ]
+  },
+  "200": {
+   "n": 5,
+   "causalscale_mean": 0.7595,
+   "causalscale_sd": 0.0515,
+   "notears_mean": 0.6291,
+   "notears_sd": 0.0306,
+   "delta_mean": 0.1304,
+   "delta_sd": 0.0357,
+   "p_paired_t_two_sided": 0.00122,
+   "cohens_d_paired": 3.65,
+   "p_wilcoxon_two_sided": 0.0625,
+   "p_sign_two_sided": 0.0625,
+   "per_seed_delta": [
+    0.0951,
+    0.1487,
+    0.1501,
+    0.1686,
+    0.0895
+   ]
+  }
+ }
+}

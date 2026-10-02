@@ -1,0 +1,26 @@
+{
+  "d": 500,
+  "n": 1208,
+  "genes": 500,
+  "gold_pairs": 166950,
+  "gold_string_only": 166936,
+  "gold_trrust_added": 14,
+  "matched_null_hit_rate": 0.6691,
+  "matched_null_precision_mean": 0.6685,
+  "matched_null_precision_95": [
+    0.6331,
+    0.7033
+  ],
+  "edge_count_compared": 647,
+  "top_corr_precision": 0.9382,
+  "top_corr_hits": 607,
+  "shipped_precision": 0.8872,
+  "shipped_hits": 574,
+  "ratio_shipped_over_corr": 0.946,
+  "recall_shipped": 0.003438,
+  "f1_shipped": 0.0069,
+  "corr_list_symmetric_share": 0.9985,
+  "engine_top50_reverse_present": 44,
+  "engine_top50_rel_diff_median": 0.00093,
+  "engine_top50_rel_diff_max": 0.01028
+}
